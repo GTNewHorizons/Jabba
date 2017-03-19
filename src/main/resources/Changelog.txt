@@ -1,0 +1,202 @@
+== v1.2.1a ==
+* Fix: Check that packets are only sent for valid Barrels
+* Fix: Make sure the name for a Structural Level exists when using color overrides
+* Fix: getStackInSlot no longer immediately notifies neighbors
+* Change: Ensure that QOL Storage upgrades are always reverse craftable
+
+== v1.2.1 ==
+* New: Added config option to reverse behaviour of left clicking so a click is one item and a shift click is a stack
+* New: Added dolly support for BluePower Machines by request of K-4U
+* Fix: Fake input stack is now created on world load for barrels that need it
+* Fix: First ghost update sent to a client will now not (fake) clear a locked barrel if it is emptied
+* Fix: Recipes are now created using the OreDictionary name defined in the config file where appropriate. (Regression fix)
+* Fix: Block world texture generation now correctly works on structural levels which are multiples of 10
+* Fix: Added additional protection against invalid calls to Block Methods
+* Fix: Barrels with Creative Upgrades on them will now properly drop their actual stored amount when broken
+* Fix: Any barrels that have a structural upgrade higher than the current max tier after editing the config will now be downgraded and marked in the log to prevent NPE's
+* Fix: Hopper upgrades should no longer stack items in inventories greater than the inventory normally allows.
+* Change: Adjusted break texture from nothing to nearly nothing as a temporary work around for a Chisel bug that is being looked into
+* Change: Dollied Monster Spawners now show the name of the entity they spawn in their item tool-tip
+* Change: Tweaked texture generation to reduce incidences of blank textures
+
+== v1.2.0a ==
+* Added fake input stack when barrel is not void and nearly full, allows mods which only handle normal inventories to detect the barrel being full.
+* Ensure that barrels do not have a negative stored count
+* Did a pass on BlockBarrel methods that use TE's to protect against NPE's and slightly improve speed.
+
+== v1.2.0 ==
+This version of JABBA is focused mainly on resolving bugs that have been exposed over the last few months. It does have some enhancements, but they are mostly behind the scenes work.
+
+=== License Change ===
+'''''Important''''': JABBA has switched from the [http://www.apache.org/licenses/LICENSE-2.0.html Apache 2.0 License] to the [https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License]
+For any commercial usage, please contact '''profmobius@mobiusstrip.eu'''
+
+=== Localization Stuff ===
+* zhCN added by SinusoidalC
+* ruRU added by Adapta
+* MC formatting codes should be supported in most of the localization entries. Guaranteed to work on the text.jabba.* block used for chat messages.
+
+=== Bugfixes ===
+* Ensure there is always a storage accessible from getStorage() (Prof): resolves a few NPE's
+* Remote checks added to prevent server code running on client(Prof/tae): stops some fake stack drops among other things
+* Grab mipmap level from current TextureMap instance instead of gameSettings: should resolve some issues with other mods that adjust textures, as well as the 1201 OpenGL error from the log at startup.
+* Adjusted rules for sending content sync packages: slight reduction in network packets sent, fixes rare NPE
+* Prevent CME in ServerTickHandler by using explicit array copy of the weak hash map to prevent other mods that trash the GC from interfering with the list while iterating over it
+* Barrels with both redstone upgrades and void upgrades will now output a redstone signal on the full trigger when the barrel reaches max stored capacity, and on proportional trigger it will output 15 strength at max capacity.
+* Fixed AIOOB on domain:item that could happen in some cases
+* When generating textures, we now check alternate materials if a material texture is unable to be loaded; if none load, the texture will default to black
+* The dolly now respects spawn protection... bad dolly!
+* While at it, Dolly-ception is no more: limited max size of NBT tag data that the dolly can pick up to 1MB. No more dollying a chest full of dollied items which are full of dollied items which are...
+* Cleaned up some of the dolly code, fixed some minor bugs with diamond dolly(item name, etc..)
+* Side upgrade stack counts no longer decrement while being applied in creative mode
+* Missing save directory/hardcore log notice adjusted to actually be logged and not just be in stdout
+* Fixed mcmod.info, Jabba will now properly show up on the mods list with information. Updated information in it and added a logo as well.
+* Fixed a few debug statements that were nulling out due to previous fixes/changes
+* Fixed log spam about non-valid entity when removing a barrel
+* Fixed barrel drops when broken: upgrades and contents should now drop in all cases (such as explosions) as opposed to just when a player breaks the barrel. For explosions, usual rules apply on 
+* Changed tuning fork to be not repairable, fixes issue in linking barrel when another mod has an item that auto repairs hotbar items. This was causing issues as we use the damage value as a timer, and no damage is equal to not attuned =P
+* Ensure that empty barrels that are unlocked are really empty
+* Added a sanity check on StorageLocal readTagCompound to ensure that no barrels have negative current stored values as this can cause unexpected behavior
+
+=== Changes ===
+* Updated to log4j (Parker8283)
+* Barrels now use smooth rendering (ganymedes01) notes: items are still shown full brightness for now,  barrels now use a multipass system that calls normal MC code
+* Redstone will now only connect to redstone enabled sides
+* Non-label barrel sides now count as "solid", except the bottom. This will change some block interactions, such as allowing torches to be placed on barrels, non-solid bottom still allows for chests to open beneath barrels
+* General code cleanup: removed old/dead code, cleaned up imports, adjusted formatting to be more consistent(tabs, bracing, spacing), refactored some code to reduce code repetition, removed unnecessary casts and annotations
+* Cleaned up texture code a bit: most dummy files are no longer needed
+* Adjusted notes for texture pack artists in the jar, please poke me(taelnia) on IRC if you have any questions
+* Moved StructuralLevel out of item package and moved all client code out of it
+* OreDict support on barrels will now check the full OreDictionary list of the barrel item and the incoming item. (Aluminum and Aluminium I'm looking at you... >_>)
+* TileEntityBarrel will now pass along a few more calls to its current IBarrelStorage
+* Along with above note, cleaned up StorageLocal a bit: cached several items and cleaned up logic. Should be *slighty* faster. (Might be noticeable only on those giant thousand barrel storage worlds ;P)
+* Debug code trigger changed
+* Updated DSU interface to latest(yay comment updates! xD)
+* Hopper modes now natively support DSU's, hoppers now check inventory interfaces in this order: IDSU, ISidedInventory, IInventory. This may speed up DSU interactions slightly due to less code being run.
+* breakBlock now uses the faster method of obtaining the TileEntity, and only does work if a valid TE is returned; also ensures cleanup/removal of the TE after we have done our work.
+* Changed OreDict caching to shortcut and cache the barrel item.
+* Ensure network channel matches modid
+* Performed optimization pass on images.
+
+=== New Stuff ===
+* Pulled out reflection code from StruturalLevel into utility class, enhanced it slightly
+* Dolly support added for Storage Drawers mod (jaquadro)
+* Vertical barrel support: configurable option(default '''ON'''), will allow for barrels to be placed with initial labelled side on top/bottom if the barrel is placed at an extreme angle(also configurable).  Along with this change, barrel top/bottom labels will now be orientated to the played upon initial barrel placement or moving with a dolly.
+* Added default support for EnderChests mod for the B-Space Upgrade recipe.
+* Copied over the client side chat utils I wrote for our ModJam4 entry, applied to localized chat so that they now support standard MC formatting codes, also fixed to not show reset character in log
+* Added experimental support to expose full barrel contents through normal MC inventory interface(default '''OFF'''). This works great for tons of mods, but please read the warning in the config file before enabling.
+* Allow vanilla comparators to work on barrels: will output a proportional signal based on amount stored. note: this provides a different behaviour from the proportional redstone side upgrade on barrels with void upgrades in that the redstone side upgrade will output a full strength signal when barrel is at capacity and the comparator will not(it will never show the barrel as full)
+* Hopper facades are now bi-directional: the facade can be configured to pull matching items into the barrel from neighboring inventories. use a barrel hammer to configure
+* Added utility methods to retrieve a TileEntity quicker, and without creating it. If using, please check return against null before using.
+
+== v1.1.4 ==
+* Better handling of custom materials in the recipes (quotes are required)
+** Ore.oreDictEntry
+** "<ItemID[:OptionalMeta]>"
+* Later initialisation of the recipes to prevent late OreDict crashes
+* Axes and Hammers can break barrels faster
+* Fixed crash on death in hardcore worlds with custom rules (Ag Skies)
+* [Forge 1112] Fixed OreDict throwing an error.
+
+== v1.1.3 ==
+* Removed the "block" prefix from automatic ore dictionary conversion
+* Tweaked tooltips of core upgrades vs structural upgrades to make them clearer
+* Added config option to change the item used for structural upgrade recipes, default is fence
+* Added config option to override specific tier colors
+* Added config option to specify stack size for base barrel and the storage upgrade, default is 64
+* Network Optimization: Content and Ghost packets should now only send when needed
+* Network Optimization: Added a packet limiter to send updates every ''packetLimiterDelay'' ms (config option, default to 500 ms).
+* Added safety checking for the Barrel Renderer
+* [MC 1.7 only] Fixed Anisotropic filtering
+* Fixed rare translucent texture issue
+* DSU interface fixed, should resolve issues with AE and LP
+
+== v1.1.2c ==
+* Fixed a texture bug relating to mods extending Jabba
+* Now forcing all barrel textures to be opaque. (No more ghost blocks)
+* Minor network optimization
+* Added a log error in a rare case of worlds not loading due to barrels
+* Minor misc bug fixes/cleanup
+
+== v1.1.2b ==
+* Fixed memory issues during texture creation that some people were experiencing
+* Fixed an issues with the Ore Dictionary lookup for mods
+
+== v1.1.2a ==
+* Fixed an issue involving material lookup
+
+== v1.1.2 ==
+=== Bugfixes ===
+* Fixed side prb with hopper upgrades.
+* Hopper upgrade will now properly call onInventoryChanged.
+* Internal handling of external calls to onInventoryChanged properly done. Should fix the sync prbs.
+* Fixed a dolly problem with barrels leading to orphan TEs.
+* Fixed item dupe when barrels are moved by other external agents.
+* Backup Jabba file data will be use in case of main file failure.
+
+=== Features ===
+* Structural upgrade items will now display the material defined in config.
+* Structural upgrade items will have a color related to the material defined in config.
+* Upgraded barrels will have a color related to the material defined in config.
+* Maximum tier is now 18, defined in config.
+* More Quality Of Life storage upgrades to account for the higher tiers.
+* Included handling for Adventure & Creative modes.
+* A creative core upgrade is now available (but not craftable). Turns a barrel into an infinite source of material.
+
+== v1.1.1a == 
+* Added packet limiter to prevent network flood when interacting with some automation mods.
+
+== v1.1.1 == 
+For this release, I would like to thanks Taelnia for making all those additions. He did an amazing job at providing code and sorting out some of my own mess.
+* Jabba now has its own creative tab ! One place for everything and everything at its place.
+* Tooltips will show a small localizable description of the upgrades.
+* All strings are now localized
+* Void core upgrade : It will make the barrel accept things even full, but send them to oblivion when they enter it. It is a restrictive upgrade on the BSpace linking process (both barrels need it, can't add it/remove it post linking).
+* Quality of Life storage upgrades : Those are storage upgrades put together to make it easier to upgrade large barrels. Shapeless crafting, 3 of the previous tier.
+* The ender chest required for the BSpace upgrade is now handled by OreDict under the name "transdimBlock". If you are a modpack maker and want to add more recipes, just register your blocks under this handle !
+
+==  v1.1.0d == 
+* Solved scaling problem saturating IOs on large servers with lot of barrels.
+* Fixed crash on death on hardcore SSP
+* Bottle'o'enchanting will look like water bottles to remove the glint effect. This is a temporary fix. A more solid solution will be put together in the next update.
+
+== v1.1.0c == 
+* Fixed race condition over the state file in SSP.
+* Fixed crash when removing a BSpace interface before a sync is completed.
+* Added OreDict caching to make automatic OreDict conversion way faster.
+
+== v1.1.0b == 
+* Fixed hopper missing check for stack size when inserting in a ISidedInventory
+* Fixed a recipe problem with LP autocrafting tables
+* Added german localization (thx to Vexatos !)
+
+== v1.1.0a == 
+* Fixed small bug with structural recipes
+
+== v1.1.0 == 
+* Localization.
+* Optimization of the network code to minimize the amount of sent data.
+* Stacks should drop properly from barrels when hit with a low angle.
+* Unless they have a hopper core upgrade, barrels do not tick anymore
+* Complete rework of the upgrade system.
+** Tiers are now called structural upgrades. They don't require the previous tier to craft but still require to be applied in order.
+** Structural upgrades open slots for core upgrades.
+** Core upgrades are applied to add functionalities to the barrels.
+** Storage upgrade will add 64 stacks of storage and takes one slot
+** Redstone upgrade let the barrel emit redstone on the faces with a Redstone facade
+** Hopper upgrade let the barrel auto output on the sides with hopper facades
+** BSpace upgrade let the player sync multiple barrels
+** Side upgrades are used to specify which side is active for a given core (Redstone, hopper). They do not take slots
+** Stickers are now side upgrades.
+** It is possible to remove upgrades using the hammer. The hammer can be configured to remove a given core upgrade by shift+clicking when not looking at a barrel.
+** Upgrades applied to a barrel can be seen when holding an upgrade, the tuning fork or the hammer in your hand.
+* All recipes are now using the OreDict whenever possible
+* Structural upgrade recipes can be configured to a specific material in the config file. Giving less then 7 values will restrict the maximum tier.
+* Stickers can now be applied on top and bottom. The display will be aligned with the front of the barrel.
+* Full rework of the rendering to make it easier on low end cards. Everything beside the stack and text is now cached and recalculated only on demand.
+* Amount of items in the barrels is now using different colors depending on the barrel texture to maximise contrast.
+* Glint as been removed for magical items to prevent a rendering bug (might be reactivated once a solution is found)
+* Diamond dolly has been added. It will allow players to move spawners around. Each time a spawner is moved, the dolly will take 1 dmg and can be used 6 times.
+* Fixed a bug with some multiblock chests from BetterStorage.
+* Dollies will now show in their tooltip what they are transporting.
+* More things and bugfixes I surely forgot.

@@ -1,0 +1,18 @@
+WORK DOCUMENT
+
+ENDER BARRELS
+    + When an ender upgrade is added, the barrel should switch to a remote storage hosted by BSpaceStorageHandler (but only server side. Client side,
+    storage should still be handled the old way since everything is already setup for that).
+        - Add creation and storage request to BSpaceHandler.
+        - Flag to specify that a barrel has a remote storage
+        - Add the index of the remote storage in the barrel itself ?
+        - Keep a list in the handler about what barrel access what storage (storage => barrel[])
+    
+    + When a barrel is tuned to another barrel, the managed storage should be changed as well.
+    
+    
+    
+    
+    + Upgrade is added
+    + Barrel request its new storage
+    + StorageHandler get's a copy of the current storage from the barrel and add the barrel index & storage to its internal list. 

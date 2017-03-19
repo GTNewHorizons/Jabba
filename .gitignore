@@ -1,0 +1,7 @@
+.gradle/
+eclipse/
+out/
+Jabba.iml
+Jabba.ipr
+Jabba.iws
+*.bat

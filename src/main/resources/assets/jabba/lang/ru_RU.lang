@@ -1,0 +1,83 @@
+item.upgrade.core.storage.name=Улучшение хранилища
+item.upgrade.core.storage3.name=Улучшение хранилища x3
+item.upgrade.core.storage9.name=Улучшение хранилища x9
+item.upgrade.core.storage27.name=Улучшение хранилища x27
+item.upgrade.core.storage81.name=Улучшение хранилища x81
+item.upgrade.core.storage243.name=Улучшение хранилища x243
+item.upgrade.core.ender.name=Пространственное улучшение
+item.upgrade.core.redstone.name=Красное улучшение
+item.upgrade.core.hopper.name=Загрузочное улучшение
+item.upgrade.core.void.name=Пустотное улучшение
+item.upgrade.core.creative.name=Творческое улучшение
+
+text.jabba.ubgrade.core.ender=Превращает бочку в пространственную бочку
+text.jabba.ubgrade.core.redstone=Позволяет бочке излучать красный камень
+text.jabba.ubgrade.core.hopper=Позволяет бочке делать автоматический вывод
+text.jabba.ubgrade.core.storage=Увеличивает ёмкость хранилища на %s стака(-ов)
+text.jabba.ubgrade.core.void=Удаляет лишние добавленные предметы, когда бочка заполнена.
+text.jabba.ubgrade.core.creative=Разрешает бесконечный вывод из бочки.
+
+item.upgrade.side.sticker.name=Наклейка
+item.upgrade.side.hopper.name=Загрузочный фасад
+item.upgrade.side.redstone.name=Красный фасад
+
+item.upgrade.structural=Структурный MK
+
+item.hammer.normal.name=Бочкообразный молот
+item.hammer.bspace.name=Бочкообразный молот (Резонирующий)
+item.hammer.redstone.name=Бочкообразный молот (Красный)
+item.hammer.hopper.name=Бочкообразный молот (Загрузочный)
+item.hammer.storage.name=Бочкообразный молот (Хранилищный)
+item.hammer.structural.name=Бочкообразный молот (Структурный)
+item.hammer.void.name=Бочкообразный молот (Пустотный)
+item.hammer.creative.name=Бочкообразный молот (Творческий)
+
+item.dolly.normal.empty.name=Тележка
+item.dolly.normal.full.name=Тележка (Полная)
+item.dolly.diamond.empty.name=Алмазная тележка
+item.dolly.diamond.full.name=Алмазная тележка (Полная)
+item.fork.name=Пространственный камертон
+
+tile.blockbarrel.name=Better Barrel
+
+text.jabba.bonk=Bonk !
+text.jabba.downgrade=Вы не можете снять улучшение с бочки.
+text.jabba.coreupgrade_exists=Основное улучшение уже установлено.
+text.jabba.upgrade_exists=Улучшение уже применено.
+text.jabba.upgrade_remove=Пожалуйста, сначала удалите некоторые улучшения.
+text.jabba.upgrade_insufficient=Не хватает слотов для улучшения. Вам потребуется минимум %s, чтобы применить это.          
+text.jabba.upgrade_required=Вам потребуется минимум улучшение Mark %s, чтобы применить это.
+text.jabba.facade_redstone=Этот фасад требует обновление красного ядра.
+text.jabba.facade_hopper=Этот фасад требует обновление загрузочного ядра.
+text.jabba.stack_remove=Пожалуйста удалите некоторые стаки.
+text.jabba.bspace_prevent=Резонанс мешает вам сделать это.
+text.jabba.bspace_remove=Резонанс исчезает...
+text.jabba.bspace_noreact=Эта бочка не реагирует на камертон.
+text.jabba.bspace_content=Содержание бочки мешает её резонировать.
+text.jabba.bsapce_structure=Структуры слишком разные, чтобы найти общую частоту.
+text.jabba.bspace_fork_resonating=Камертон начинает резонировать.
+text.jabba.bspace_fork_lost=Камертон потерял оригинальный источник.
+text.jabba.bspace_resonating=Бочки резонируют вместе.
+text.jabba.hammer_normal=Ваш молот превращается в нормальный.
+text.jabba.hammer_bspace=Вы чувствуете, что Ваш молот начинает резонировать.
+text.jabba.hammer_redstone=Ваш молот начинает излучать красный свет.
+text.jabba.hammer_hopper=You begin to have trouble holding onto your hammer.
+text.jabba.hammer_storage=Ваш молот начинает расти.
+text.jabba.hammer_structural=Ваш молот становится точным инструмент для уничтожения.
+text.jabba.hammer_void=Ваш молот, кажется, исчезает.
+text.jabba.hammer_creative=У Вас, кажется, вдруг появляется бесконечное количество молотов.
+
+itemGroup.jabba=Better Barrels
+
+text.jabba.waila.structural=Структурный уровень : %s
+text.jabba.waila.upgrades=Слотов для улучшений : %s / %s
+text.jabba.waila.items=%s / %s предметов
+text.jabba.waila.stacks=%s макс. стаков
+text.jabba.waila.empty=<Пусто>
+text.jabba.waila.key.content=Содержимое бочки
+text.jabba.waila.key.quantity=Количество предметов
+text.jabba.waila.key.stacks=Макс. стаков
+
+text.jabba.tooltip.slots.used=Использовано слотов : 
+text.jabba.tooltip.slots.provided=Слотов предоставлено : 
+text.jabba.tooltip.empty=< Пустая >

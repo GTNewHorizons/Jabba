@@ -1,0 +1,56 @@
+item.upgrade.core.storage.name=存储升级
+item.upgrade.core.ender.name=B空间升级
+item.upgrade.core.redstone.name=红石升级
+item.upgrade.core.hopper.name=漏斗升级
+
+item.upgrade.side.sticker.name=贴面
+item.upgrade.side.hopper.name=漏斗贴面
+item.upgrade.side.redstone.name=红石贴面
+
+item.upgrade.structural.0.name=结构等级 MKI (木)
+item.upgrade.structural.1.name=结构等级 MKII (铁)
+item.upgrade.structural.2.name=结构等级 MKIII (金)
+item.upgrade.structural.3.name=结构等级 MKIV (钻石)
+item.upgrade.structural.4.name=结构等级 MKV (黑曜石)
+item.upgrade.structural.5.name=结构等级 MKVI (末地石)
+item.upgrade.structural.6.name=结构等级 MKVII (绿宝石)
+
+item.hammer.normal.name=桶锤
+item.hammer.bspace.name=桶锤(谐振)
+item.hammer.redstone.name=桶锤(红石)
+item.hammer.hopper.name=桶锤(漏斗)
+item.hammer.storage.name=桶锤(储存)
+item.hammer.structural.name=桶锤(结构)
+
+item.dolly.normal.empty.name=手推车
+item.dolly.normal.full.name=手推车(满)
+item.dolly.diamond.empty.name=钻石手推车
+item.dolly.diamond.full.name=钻石手推车(满)
+item.fork.name=B空间音叉
+
+text.jabba.bonk=梆!
+text.jabba.downgrade=你不能降级此桶
+text.jabba.coreupgrade_exists=核心升级已经安装
+text.jabba.upgrade_exists=升级已经启用了
+text.jabba.upgrade_remove=请先移除一些升级
+text.jabba.upgrade_insufficient=没有足够的升级插槽了，你需要最少 %s 个插槽启用它
+text.jabba.upgrade_required=你需要至少一个 %s 升级标记来启用它.
+text.jabba.facade_redstone=这个贴面需要一个红石升级.
+text.jabba.facade_hopper=这个贴面需要一个漏斗升级.
+text.jabba.stack_remove=请先移除一些物品.
+text.jabba.bspace_prevent=在共鸣期间不能这么干.
+text.jabba.bspace_remove=共鸣消失...
+text.jabba.bspace_noreact=这个桶没有对音叉作出反应.
+text.jabba.bspace_content=桶中的物品阻止了本次共鸣.
+text.jabba.bsapce_structure=结构差异巨大,以至于难以找到共同频率.
+text.jabba.bspace_fork_resonating=音叉开始产生共鸣.
+text.jabba.bspace_fork_lost=音叉已失去原始共鸣来源.
+text.jabba.bspace_resonating=桶在共鸣.
+text.jabba.hammer_normal=你的桶锤已回归正常状态.
+text.jabba.hammer_bspace=你感到你的锤子开始共鸣.
+text.jabba.hammer_redstone=你的锤开始发出红石信号.
+text.jabba.hammer_hopper=你开始难以握住锤子.
+text.jabba.hammer_storage=你的锤子开始成长.
+text.jabba.hammer_structural=你的锤子已经成了一把用于精准破坏的工具.
+text.jabba.hammer_void=你的锤子好像不见了.
+text.jabba.hammer_creative=你好像突然有了无限的锤子来源.
