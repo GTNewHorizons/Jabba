@@ -93,7 +93,7 @@ public class ItemBarrelMover extends Item {
 
 		classExtensionsNames.add("com.bluepowermod.tile.TileBase");
 
-		classExtensionsNames.add("com.rwtema.extrautils.tileentity.chests.BlockFullChest");
+		classExtensionsNames.add("com.rwtema.extrautils.tileentity.chests.TileFullChest");
 
 		for (String s : classExtensionsNames) {
 			try {
@@ -233,6 +233,13 @@ public class ItemBarrelMover extends Item {
 		/* Forestry engines orientation correction */
 		if (TEClassName.contains("forestry.energy.gadgets") && nbtContainer.hasKey("Orientation"))
 			nbtContainer.setInteger("Orientation", 1);
+		
+		/* Forestry chests orientation correction */
+		if ((TEClassName.contains("forestry.apiculture.tiles.TileApiaristChest") 
+				|| TEClassName.contains("forestry.arboriculture.tiles.TileArboristChest")
+				|| TEClassName.contains("forestry.lepidopterology.tiles.TileLepidopteristChest"))
+				&& nbtContainer.hasKey("Orientation"))
+			nbtContainer.setInteger("Orientation", this.getBarrelOrientationOnPlacement(player).ordinal());
 
 		/* Dartcraft engines orientation correction */
 		if (TEClassName.contains("bluedart.tile.TileEntityForceEngine") && nbtContainer.hasKey("facing"))
@@ -277,6 +284,11 @@ public class ItemBarrelMover extends Item {
 
 		if (TEClassName.contains("jds.bibliocraft.tileentities.TileEntityArmorStand"))
 			blockMeta = this.fromForgeToBiblio(this.getBarrelOrientationOnPlacement(player));
+		
+		/* Extra Utilities chest orientation correction */
+		if (TEClassName.contains("com.rwtema.extrautils.tileentity.chests.TileFullChest")) 
+			blockMeta = (this.fromForgeToBiblio(this.getBarrelOrientationOnPlacement(player)) == 3 
+					? 0 : this.fromForgeToBiblio(this.getBarrelOrientationOnPlacement(player)) + 1);
 
 		//if (TEClassName.contains("jds.bibliocraft.tileentities") && nbtContainer.hasKey("caseAngle"))
 		//	nbtContainer.setInteger("caseAngle", this.fromForgeToBiblio(this.getBarrelOrientationOnPlacement(player)));
@@ -488,6 +500,7 @@ public class ItemBarrelMover extends Item {
 	protected boolean pickupContainer(ItemStack stack, EntityPlayer player, World world, int x, int y, int z) {
 		TileEntity containerTE = world.getTileEntity(x, y, z);
 		if (containerTE == null) return false;
+		//System.out.println(containerTE.getClass().toString());
 
 		Block storedBlock = world.getBlock(x, y, z);
 		int blockMeta          = world.getBlockMetadata(x, y, z);
