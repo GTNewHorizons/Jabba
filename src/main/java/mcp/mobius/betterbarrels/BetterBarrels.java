@@ -88,6 +88,7 @@ public class BetterBarrels {
 
 	public static boolean exposeFullStorageSize = false;
 	public static boolean reverseBehaviourClickLeft = false;
+	public static boolean allowOreDictUnification = true;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -122,6 +123,8 @@ public class BetterBarrels {
 			exposeFullStorageSize = config.getBoolean("exposeFullStorageSize", "experimental", false, "If true, barrels will expose their full contents through the standard MC inventory interfaces. This will allow mods that do not support the DSU to see the full contents of the barrel. *** WARNING *** This will allow mods that do not properly handle inventories to empty out a barrel in one go. Use at your own risk. If you do find such a game breaking mod, please report to that mods' author and ask them to handle inventories better. Otherwise, please enjoy this experimental feature ^_^");
 
 			reverseBehaviourClickLeft = config.getBoolean("reverseBehaviourClickLeft", Configuration.CATEGORY_GENERAL, false, "If true, punching a barrel will remove one item and shift punching a stack.");
+			
+			allowOreDictUnification = config.getBoolean("allowOreDictUnification", Configuration.CATEGORY_GENERAL, true, "If true, Jabba will try unificate 'ingot' 'ore' 'dust' and 'nugget' using oredict");
 
 			//fullBarrelTexture  = config.get(Configuration.CATEGORY_GENERAL, "fullBarrelTexture", true).getBoolean(true);
 			//highRezTexture     = config.get(Configuration.CATEGORY_GENERAL, "highRezTexture", false).getBoolean(false);
