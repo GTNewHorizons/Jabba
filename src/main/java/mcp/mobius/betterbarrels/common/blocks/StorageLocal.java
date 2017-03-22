@@ -118,10 +118,11 @@ public class StorageLocal implements IBarrelStorage {
 				if (oreIDsBarrel.length > 0 && oreIDsStack.length > 0) {
 					for (int barrelOreID : oreIDsBarrel) {
 						String oreNameBarrel = OreDictionary.getOreName(barrelOreID);
-						boolean stackIsMetal = oreNameBarrel.startsWith("ingot") ||
+						boolean stackIsMetal =  BetterBarrels.allowOreDictUnification &&
+						                (oreNameBarrel.startsWith("ingot") ||
 								oreNameBarrel.startsWith("ore") ||
 								oreNameBarrel.startsWith("dust") ||
-								oreNameBarrel.startsWith("nugget");
+								oreNameBarrel.startsWith("nugget"));
 
 						if (!stackIsMetal) continue;
 
