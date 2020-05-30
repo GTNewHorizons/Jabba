@@ -36,7 +36,7 @@ apply plugin: 'java'
 apply plugin: 'forge'
 apply plugin: 'maven'
 
-version = "1.2.5_1.7.10"
+version = "1.2.6_1.7.10"
 group= "mcp.mobius.jabba" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Jabba"
 
@@ -57,7 +57,7 @@ dependencies {
 }
 
 minecraft {
-    version = "1.7.10-10.13.2.1264"
+    version = "1.7.10-10.13.4.1614-1.7.10"
     assetDir = "eclipse/assets"
 }
 
