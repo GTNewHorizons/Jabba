@@ -2,6 +2,7 @@ package mcp.mobius.betterbarrels.client;
 
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.Field;
+import java.nio.charset.Charset;
 import java.util.Map;
 
 import mcp.mobius.betterbarrels.BetterBarrels;
@@ -85,7 +86,7 @@ public class ClientProxy extends BaseProxy {
 					for (StructuralLevel level : StructuralLevel.LEVELS) {
 						if (level.levelNum == 0) { continue; }
 						level.clientData.generateIcons();
-						StringTranslate.inject(new ByteArrayInputStream(("item.upgrade.structural." + String.valueOf(level.levelNum) + ".name=" + StatCollector.translateToLocal("item.upgrade.structural") + " " +  Utils.romanNumeral(level.levelNum) + " (" +  level.clientData.getMaterialName() + ")").getBytes()));
+						StringTranslate.inject(new ByteArrayInputStream(("item.upgrade.structural." + String.valueOf(level.levelNum) + ".name=" + StatCollector.translateToLocal("item.upgrade.structural") + " " +  Utils.romanNumeral(level.levelNum) + " (" +  level.clientData.getMaterialName() + ")").getBytes(Charset.forName("UTF-8"))));
 					}
 				}
 				StructuralLevelClientData.unloadBaseTextureData();
