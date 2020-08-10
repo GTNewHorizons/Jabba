@@ -32,7 +32,8 @@ public class TileEntityBarrelRenderer extends TileEntityBaseRenderer {
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double xpos, double ypos, double zpos, float var8) {
-		if (tileEntity instanceof TileEntityBarrel) {
+		if (tileEntity instanceof TileEntityBarrel && BetterBarrels.renderStackAndText &&
+				(xpos + 0.5) * (xpos + 0.5) + (ypos + 0.5) * (ypos + 0.5) + (zpos + 0.5) * (zpos + 0.5) < BetterBarrels.renderDistance) {
 			this.saveBoundTexture();
 			//int[][] savedGLState = modifyGLState(new int[]{ GL11.GL_BLEND }, new int[]{ GL11.GL_LIGHTING });
 			// the following is how it was set, enabling lighting makes it look better with smooth lighting, mostly... bottom labels are abit dark
