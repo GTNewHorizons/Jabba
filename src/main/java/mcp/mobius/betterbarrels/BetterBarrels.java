@@ -89,6 +89,9 @@ public class BetterBarrels {
 	public static boolean exposeFullStorageSize = false;
 	public static boolean reverseBehaviourClickLeft = false;
 	public static boolean allowOreDictUnification = true;
+	
+	public static boolean renderStackAndText = false;
+	public static float renderDistance = 16F;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -125,6 +128,9 @@ public class BetterBarrels {
 			reverseBehaviourClickLeft = config.getBoolean("reverseBehaviourClickLeft", Configuration.CATEGORY_GENERAL, false, "If true, punching a barrel will remove one item and shift punching a stack.");
 			
 			allowOreDictUnification = config.getBoolean("allowOreDictUnification", Configuration.CATEGORY_GENERAL, true, "If true, Jabba will try unificate 'ingot' 'ore' 'dust' and 'nugget' using oredict");
+
+			renderDistance = config.getFloat("renderDistance", Configuration.CATEGORY_GENERAL, 16f, 0f, 10000f, "Render Distance (square) for stack and text on barrel.");
+			renderStackAndText = config.getBoolean("renderStackAndText", Configuration.CATEGORY_GENERAL, true, "");
 
 			//fullBarrelTexture  = config.get(Configuration.CATEGORY_GENERAL, "fullBarrelTexture", true).getBoolean(true);
 			//highRezTexture     = config.get(Configuration.CATEGORY_GENERAL, "highRezTexture", false).getBoolean(false);
