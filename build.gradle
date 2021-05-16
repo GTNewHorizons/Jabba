@@ -46,7 +46,7 @@ apply plugin: 'java'
 apply plugin: 'forge'
 apply plugin: 'maven'
 
-version = "${config.mod_version}"
+version = "${config.mod_version}-${config.mc_version}"
 group= "mcp.mobius.jabba" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Jabba"
 
