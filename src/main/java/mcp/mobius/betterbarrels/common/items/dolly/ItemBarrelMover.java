@@ -95,6 +95,8 @@ public class ItemBarrelMover extends Item {
 
 		classExtensionsNames.add("com.rwtema.extrautils.tileentity.chests.TileFullChest");
 
+		classExtensionsNames.add("team.chisel.block.tileentity.TileEntityPresent");
+
 		for (String s : classExtensionsNames) {
 			try {
 				classExtensions.add(Class.forName(s));
@@ -289,6 +291,10 @@ public class ItemBarrelMover extends Item {
 		if (TEClassName.contains("com.rwtema.extrautils.tileentity.chests.TileFullChest")) 
 			blockMeta = (this.fromForgeToBiblio(this.getBarrelOrientationOnPlacement(player)) == 3 
 					? 0 : this.fromForgeToBiblio(this.getBarrelOrientationOnPlacement(player)) + 1);
+
+		/* Chisel Present Chest orientation correction */
+		if (TEClassName.contains("team.chisel.block.tileentity.TileEntityPresent") && nbtContainer.hasKey("rotation"))
+			nbtContainer.setInteger("rotation", (byte)this.getBarrelOrientationOnPlacement(player).ordinal());
 
 		//if (TEClassName.contains("jds.bibliocraft.tileentities") && nbtContainer.hasKey("caseAngle"))
 		//	nbtContainer.setInteger("caseAngle", this.fromForgeToBiblio(this.getBarrelOrientationOnPlacement(player)));
