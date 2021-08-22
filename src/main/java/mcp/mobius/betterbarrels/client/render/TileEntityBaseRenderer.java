@@ -64,7 +64,7 @@ public abstract class TileEntityBaseRenderer extends TileEntitySpecialRenderer {
 		GL11.glPushMatrix();
 
 		this.alignRendering(side, orientation, barrelPos);
-		this.moveRendering(size, posx, posy, -0.001);
+		this.moveRendering(size, posx, posy, -0.01);
 
 		GL11.glRotatef(angle, 0.0f, 0.0f, 1.0f);
 
