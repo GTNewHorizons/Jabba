@@ -61,11 +61,12 @@ text.jabba.bspace_resonating=Бочки резонируют вместе.
 text.jabba.hammer_normal=Ваш молот превращается в нормальный.
 text.jabba.hammer_bspace=Вы чувствуете, что Ваш молот начинает резонировать.
 text.jabba.hammer_redstone=Ваш молот начинает излучать красный свет.
-text.jabba.hammer_hopper=You begin to have trouble holding onto your hammer.
+text.jabba.hammer_hopper=У вас начинаются проблемы с удержанием вашего молотка.
 text.jabba.hammer_storage=Ваш молот начинает расти.
 text.jabba.hammer_structural=Ваш молот становится точным инструмент для уничтожения.
 text.jabba.hammer_void=Ваш молот, кажется, исчезает.
 text.jabba.hammer_creative=У Вас, кажется, вдруг появляется бесконечное количество молотов.
+text.jabba.dolly_too_complex=Этот объект слишком плотный, чтобы его можно было поднять. Уменьшите его сложность, если вам нужно его переместить.
 
 itemGroup.jabba=Better Barrels
 
