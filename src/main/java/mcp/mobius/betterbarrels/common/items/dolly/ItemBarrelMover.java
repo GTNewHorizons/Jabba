@@ -454,10 +454,22 @@ public class ItemBarrelMover extends Item {
 			return true;
 		if (te instanceof TileEntityChest)
 			return true;
+		if (isTileBlacklisted(te.getClass())) {
+			return false;
+		}
 		for (Class c : classExtensions) {
 			if (c!=null && c.isInstance(te))
 				return true;
 		}
+		return false;
+	}
+	
+	private boolean isTileBlacklisted(Class clazz) {
+		for (Class<? extends TileEntity> tileClass : BetterBarrels.BlacklistedTileEntiyClasses) {
+			if (clazz == tileClass) {
+				return true;
+			}
+		}	
 		return false;
 	}
 

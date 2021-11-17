@@ -1,6 +1,7 @@
 package mcp.mobius.betterbarrels;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -33,6 +34,7 @@ import mcp.mobius.betterbarrels.common.items.upgrades.ItemUpgradeStructural;
 import mcp.mobius.betterbarrels.network.BarrelPacketHandler;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.config.Configuration;
 
 @Mod(modid=BetterBarrels.modid, name=BetterBarrels.modid, version="1.2.2", dependencies="after:Waila;after:NotEnoughItems")
@@ -92,6 +94,8 @@ public class BetterBarrels {
 	
 	public static boolean renderStackAndText = false;
 	public static float renderDistance = 16F;
+	public static String[] BlacklistedTileEntiyClassNames;
+	public static HashSet<Class<? extends TileEntity>> BlacklistedTileEntiyClasses;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -132,6 +136,10 @@ public class BetterBarrels {
 			renderDistance = config.getFloat("renderDistance", Configuration.CATEGORY_GENERAL, 10000f, 0f, 10000f, "Render Distance (square) for stack and text on barrel.");
 			renderStackAndText = config.getBoolean("renderStackAndText", Configuration.CATEGORY_GENERAL, true, "");
 
+			//Blacklisted TileEntities for the Dolly
+			BlacklistedTileEntiyClassNames = config.getStringList("BlacklistedTileEntiyClassNames", Configuration.CATEGORY_GENERAL,	BlacklistedTileEntiyClassNames,
+					"The Canonical Class-Names of TileEntities that should be ignored when using a Dolly.");
+			
 			//fullBarrelTexture  = config.get(Configuration.CATEGORY_GENERAL, "fullBarrelTexture", true).getBoolean(true);
 			//highRezTexture     = config.get(Configuration.CATEGORY_GENERAL, "highRezTexture", false).getBoolean(false);
 			//showUpgradeSymbols = config.get(Configuration.CATEGORY_GENERAL, "showUpgradeSymbols", false).getBoolean(false);
@@ -141,6 +149,21 @@ public class BetterBarrels {
 		} finally {
 			if (config.hasChanged())
 				config.save();
+		}
+		
+		//Process Dolly Blacklist
+		for (String className : BlacklistedTileEntiyClassNames) {
+			Class aClass;
+			try {
+				aClass = Class.forName(className, false, null);
+				if (aClass != null && aClass.isInstance(TileEntity.class)) {
+					Class<? extends TileEntity> aTileClass = aClass;
+					BlacklistedTileEntiyClasses.add(aTileClass);
+				}
+			}
+			catch (ClassNotFoundException e) {
+				log.log(Level.INFO, "Did not find "+className+", unable to blacklist from Dolly.");
+			}			
 		}
 
 		proxy.registerEventHandler();
