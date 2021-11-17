@@ -94,7 +94,7 @@ public class BetterBarrels {
 	
 	public static boolean renderStackAndText = false;
 	public static float renderDistance = 16F;
-	public static String[] BlacklistedTileEntiyClassNames;
+	public static String[] BlacklistedTileEntiyClassNames = new String[] { "ic2.core.block.machine.tileentity.TileEntityNuke"};
 	public static HashSet<Class<? extends TileEntity>> BlacklistedTileEntiyClasses;
 
 	@EventHandler

@@ -5,3 +5,13 @@ Jabba.iml
 Jabba.ipr
 Jabba.iws
 *.bat
+
+######################################
+## Remove MAC OSX generated garbage
+######################################
+
+*/.DS_Store
+.DS_Store
+.DS_Store?
+.Trashes
+Icon?
