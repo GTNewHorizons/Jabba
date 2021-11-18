@@ -95,7 +95,7 @@ public class BetterBarrels {
 	public static boolean renderStackAndText = false;
 	public static float renderDistance = 16F;
 	public static String[] BlacklistedTileEntiyClassNames = new String[] {"ic2.core.block.machine.tileentity.TileEntityNuke"};
-	public static HashSet<Class<? extends TileEntity>> BlacklistedTileEntiyClasses = new HashSet<Class<? extends TileEntity>>();
+	public static HashSet<Class<? extends TileEntity>> BlacklistedTileEntityClasses = new HashSet<Class<? extends TileEntity>>();
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -158,7 +158,7 @@ public class BetterBarrels {
 				aClass = Class.forName(className, false, getClass().getClassLoader());
 				if (aClass != null && TileEntity.class.isAssignableFrom(aClass)) {
 					Class<? extends TileEntity> aTileClass = aClass;
-					BlacklistedTileEntiyClasses.add(aTileClass);
+					BlacklistedTileEntityClasses.add(aTileClass);
 					log.log(Level.INFO, "Blacklisted "+className+" from Dolly.");
 				}
 				else {
