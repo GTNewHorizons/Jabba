@@ -465,7 +465,7 @@ public class ItemBarrelMover extends Item {
 	}
 	
 	private boolean isTileBlacklisted(Class clazz) {
-		for (Class<? extends TileEntity> tileClass : BetterBarrels.BlacklistedTileEntiyClasses) {
+		for (Class<? extends TileEntity> tileClass : BetterBarrels.BlacklistedTileEntityClasses) {
 			if (clazz == tileClass) {
 				return true;
 			}
