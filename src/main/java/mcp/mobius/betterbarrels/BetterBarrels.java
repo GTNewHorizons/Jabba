@@ -37,7 +37,7 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.config.Configuration;
 
-@Mod(modid=BetterBarrels.modid, name=BetterBarrels.modid, version="1.2.2", dependencies="after:Waila;after:NotEnoughItems")
+@Mod(modid=BetterBarrels.modid, name=BetterBarrels.modid, version="GRADLETOKEN_VERSION", dependencies="after:Waila;after:NotEnoughItems")
 public class BetterBarrels {
 
 	private static boolean DEBUG = Boolean.parseBoolean(System.getProperty("mcp.mobius.debugJabba","false"));

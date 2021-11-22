@@ -1,10 +1,10 @@
 [
 {
-  "modid": "JABBA",
-  "name": "JABBA",
+  "modid": "${modId}",
+  "name": "${modName}",
   "description": "Moar barrels\n\nThe Jabba team would like to thank the Academy for this award... oh wait... *cough* erm... Credits to neptunepink for the original barrel idea, Q and his community for the name, special thanks to skyboy for rendering assistance and the DSU, and the many people whom have made modded MC such an awesome thing to be a part of.",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
+  "version": "${modVersion}",
+  "mcversion": "${minecraftVersion}",
   "url": "http://mobiusstrip.eu/wiki/Jabba",
   "updateUrl": "",
   "authorList": ["ProfMobius", "Taelnia"],
