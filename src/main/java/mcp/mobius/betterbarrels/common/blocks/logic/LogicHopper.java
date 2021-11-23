@@ -1,5 +1,6 @@
 package mcp.mobius.betterbarrels.common.blocks.logic;
 
+import cpw.mods.fml.common.Loader;
 import mcp.mobius.betterbarrels.common.blocks.IBarrelStorage;
 import mcp.mobius.betterbarrels.common.blocks.TileEntityBarrel;
 import mcp.mobius.betterbarrels.common.items.upgrades.UpgradeSide;
@@ -13,8 +14,17 @@ import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 public enum LogicHopper {
 	INSTANCE;
 
+	private static Boolean isMFRLoaded = null;
+
+	private static boolean isMFRLoaded() {
+		if(isMFRLoaded == null) {
+			isMFRLoaded = Loader.isModLoaded("MineFactoryReloaded");
+		}
+		return isMFRLoaded;
+	}
+
 	private boolean isStorage(TileEntity inventory) {
-		if (inventory instanceof IDeepStorageUnit) {
+		if (isMFRLoaded() && inventory instanceof IDeepStorageUnit) {
 			return true;
 		}
 		if (inventory instanceof IInventory) {
@@ -71,7 +81,7 @@ public enum LogicHopper {
 	private int freeSpaceForStack(TileEntity target, ForgeDirection side, IBarrelStorage barrel, int maxSeeking) {
 		ItemStack stack = barrel.getStackInSlot(1);
 		int ret = 0;
-		if (target instanceof IDeepStorageUnit) {
+		if (isMFRLoaded() && target instanceof IDeepStorageUnit) {
 			IDeepStorageUnit dsu = (IDeepStorageUnit)target;
 			ItemStack is = dsu.getStoredItemType();
 			if (is == null) {
@@ -121,7 +131,7 @@ public enum LogicHopper {
 		ItemStack stack = barrel.getStackInSlot(1);
 		int transferAmount = Math.min(maxTransfer, stack.stackSize);
 
-		if (target instanceof IDeepStorageUnit) {
+		if (isMFRLoaded() && target instanceof IDeepStorageUnit) {
 			IDeepStorageUnit dsu = (IDeepStorageUnit)target;
 			ItemStack is = dsu.getStoredItemType();
 
@@ -209,7 +219,7 @@ public enum LogicHopper {
 	}
 
 	private ItemStack pullMatchingItemFromInventory(TileEntity source, ForgeDirection side, IBarrelStorage barrel, int maxTransfer) {
-		if (source instanceof IDeepStorageUnit) {
+		if (isMFRLoaded() && source instanceof IDeepStorageUnit) {
 			IDeepStorageUnit dsu = (IDeepStorageUnit)source;
 			ItemStack stack = dsu.getStoredItemType();
 			if (stack != null && barrel.sameItem(stack) && stack.stackSize > 0) {
