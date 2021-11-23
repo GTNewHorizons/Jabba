@@ -2,4 +2,5 @@
 
 dependencies {
     compile("com.github.GTNewHorizons:waila:unified-build-script-SNAPSHOT:dev")
+    compileOnly("curse.maven:minefactory-reloaded-66672:2366151")
 }
