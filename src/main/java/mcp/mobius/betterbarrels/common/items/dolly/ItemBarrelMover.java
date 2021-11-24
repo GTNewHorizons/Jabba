@@ -6,6 +6,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import forestry.factory.recipes.MemorizedRecipe;
+import forestry.factory.recipes.RecipeMemory;
 import mcp.mobius.betterbarrels.BetterBarrels;
 import mcp.mobius.betterbarrels.Utils;
 import mcp.mobius.betterbarrels.common.JabbaCreativeTab;
@@ -29,6 +31,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import forestry.factory.tiles.TileWorktable;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.GameData;
 
@@ -63,6 +66,7 @@ public class ItemBarrelMover extends Item {
 		classExtensionsNames.add("forestry.apiculture.tiles.TileApiaristChest");
 		classExtensionsNames.add("forestry.arboriculture.tiles.TileArboristChest");
 		classExtensionsNames.add("forestry.lepidopterology.tiles.TileLepidopteristChest");
+		classExtensionsNames.add("forestry.factory.tiles.TileWorktable");
 
 		classExtensionsNames.add("bluedart.tile.TileEntityForceEngine");
 
@@ -236,10 +240,11 @@ public class ItemBarrelMover extends Item {
 		if (TEClassName.contains("forestry.energy.gadgets") && nbtContainer.hasKey("Orientation"))
 			nbtContainer.setInteger("Orientation", 1);
 		
-		/* Forestry chests orientation correction */
+		/* Forestry chests and worktable orientation correction */
 		if ((TEClassName.contains("forestry.apiculture.tiles.TileApiaristChest") 
 				|| TEClassName.contains("forestry.arboriculture.tiles.TileArboristChest")
-				|| TEClassName.contains("forestry.lepidopterology.tiles.TileLepidopteristChest"))
+				|| TEClassName.contains("forestry.lepidopterology.tiles.TileLepidopteristChest")
+				|| TEClassName.contains("forestry.factory.tiles.TileWorktable"))
 				&& nbtContainer.hasKey("Orientation"))
 			nbtContainer.setInteger("Orientation", this.getBarrelOrientationOnPlacement(player).ordinal());
 
@@ -415,9 +420,8 @@ public class ItemBarrelMover extends Item {
 		}
 
 		world.setBlock(targX, targY, targZ, storedBlock, blockMeta, 1 + 2);
-		world.getTileEntity(targX, targY, targZ).readFromNBT(nbtContainer);
-
 		TileEntity entity = world.getTileEntity(targX, targY, targZ);
+		entity.readFromNBT(nbtContainer);
 
 		/* IC2 orientation fix part2 */
 		if (classMap.get("ic2.api.tile.IWrenchable") != null && classMap.get("ic2.api.tile.IWrenchable").isInstance(entity))
@@ -425,6 +429,18 @@ public class ItemBarrelMover extends Item {
 
 		if (TEClassName.contains("net.minecraft.tileentity.TileEntityChest"))
 			world.setBlockMetadataWithNotify(targX, targY, targZ, blockMeta, 1 + 2);
+
+		if (TEClassName.contains("forestry.factory.tiles.TileWorktable")) {
+			// Need to manually rebuild recipe outputs for memorized recipes.
+			// They don't get rebuilt when reading from NBT, for some reason.
+			RecipeMemory recipeMemory = ((TileWorktable) entity).getMemory();
+			for (int i = 0; i < RecipeMemory.capacity; i++) {
+				MemorizedRecipe recipe = recipeMemory.getRecipe(i);
+				if (recipe != null) {
+					recipe.calculateRecipeOutput(world);
+				}
+			}
+		}
 
 		stack.getTagCompound().removeTag("Container");
 
