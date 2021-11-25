@@ -1,0 +1,6 @@
+// Add your dependencies here
+
+dependencies {
+    compile("com.github.GTNewHorizons:waila:master-SNAPSHOT:dev")
+    compileOnly("curse.maven:minefactory-reloaded-66672:2366150")
+}

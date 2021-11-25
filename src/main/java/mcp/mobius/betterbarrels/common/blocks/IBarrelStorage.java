@@ -1,10 +1,12 @@
 package mcp.mobius.betterbarrels.common.blocks;
 
+import cpw.mods.fml.common.Optional;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 
+@Optional.Interface(iface = "powercrystals.minefactoryreloaded.api.IDeepStorageUnit", modid = "MineFactoryReloaded")
 public interface IBarrelStorage extends ISidedInventory, IDeepStorageUnit{
 
 	public boolean   hasItem();
@@ -44,4 +46,14 @@ public interface IBarrelStorage extends ISidedInventory, IDeepStorageUnit{
 	public void    rmStorageUpgrade();
 
 	public ItemStack decrStackSize_Hopper(int slot, int quantity);
+
+	// Provide IDeepStorageUnit methods, even when the interface is stripped
+	@Override
+	ItemStack getStoredItemType();
+	@Override
+	void setStoredItemCount(int var1);
+	@Override
+	void setStoredItemType(ItemStack var1, int var2);
+	@Override
+	int getMaxStoredCount();
 }
