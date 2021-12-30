@@ -3,16 +3,13 @@ package mcp.mobius.betterbarrels;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import cpw.mods.fml.common.*;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -207,7 +204,9 @@ public class BetterBarrels {
 
 	@EventHandler
 	public void load(FMLInitializationEvent event) {
-		RecipeHandler.instance().registerRecipes();
+		if (!Loader.isModLoaded("dreamcraft")) {
+			RecipeHandler.instance().registerRecipes();
+		}
 		GameRegistry.registerTileEntity(TileEntityBarrel.class, "TileEntityBarrel");
 		FMLCommonHandler.instance().bus().register(ServerTickHandler.INSTANCE);
 		proxy.registerRenderers();
@@ -217,7 +216,9 @@ public class BetterBarrels {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		RecipeHandler.instance().registerOres();
-		RecipeHandler.instance().registerLateRecipes();
+		if (!Loader.isModLoaded("dreamcraft")) {
+			RecipeHandler.instance().registerLateRecipes();
+		}
 		proxy.postInit();
 	}
 
