@@ -1,8 +1,8 @@
 // Add your dependencies here
 
 dependencies {
-    compile("com.github.GTNewHorizons:waila:master-SNAPSHOT:dev")
+    compile("com.github.GTNewHorizons:waila:1.5.18:dev")
     compileOnly("curse.maven:minefactory-reloaded-66672:2366150")
-    compileOnly("net.sengir.forestry:forestry_1.7.10:4.2.9.57:dev")
+    compileOnly("com.github.GTNewHorizons:ForestryMC:4.4.4:dev")
     compileOnly("com.mod-buildcraft:buildcraft:7.1.23:dev") // Needed by Forestry
 }
