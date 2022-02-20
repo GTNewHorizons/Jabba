@@ -45,7 +45,7 @@ text.jabba.downgrade=You cannot downgrade a barrel.
 text.jabba.coreupgrade_exists=Core upgrade already installed.
 text.jabba.upgrade_exists=Upgrade already applied.
 text.jabba.upgrade_remove=Please remove some upgrades first.
-text.jabba.upgrade_insufficient=Not enough upgrade slots for this upgrade. You need at least %s to apply this.          
+text.jabba.upgrade_insufficient=Not enough upgrade slots for this upgrade. You need at least %s to apply this.
 text.jabba.upgrade_required=You need at least an upgrade Mark %s to apply this.
 text.jabba.facade_redstone=This facade requires a redstone core update.
 text.jabba.facade_hopper=This facade requires a hopper core update.
@@ -79,6 +79,8 @@ text.jabba.waila.key.content=Barrel content
 text.jabba.waila.key.quantity=Items quantity
 text.jabba.waila.key.stacks=Max stacks
 
-text.jabba.tooltip.slots.used=Slots Used : 
-text.jabba.tooltip.slots.provided=Slots Provided : 
+text.jabba.tooltip.slots.used=Slots Used :
+text.jabba.tooltip.slots.provided=Slots Provided :
 text.jabba.tooltip.empty=< Empty >
+
+mcp.mobius.betterbarrel=Barrel

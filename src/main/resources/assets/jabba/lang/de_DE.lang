@@ -42,7 +42,7 @@ text.jabba.downgrade=Du kannst ein Fass nicht downgraden.
 text.jabba.coreupgrade_exists=Kern-Upgrade bereits installiert.
 text.jabba.upgrade_exists=Upgrade bereits enthalten.
 text.jabba.upgrade_remove=Bitte entferne zuerst einige Upgrades.
-text.jabba.upgrade_insufficient=Nicht genügend freie Upgrade-Slots für dieses Upgrade. Du brauchst mindestens %s, um dies zu installieren.          
+text.jabba.upgrade_insufficient=Nicht genügend freie Upgrade-Slots für dieses Upgrade. Du brauchst mindestens %s, um dies zu installieren.
 text.jabba.upgrade_required=Du benötigst mindestens ein Mark-%s-Upgrade, um dies zu installieren.
 text.jabba.facade_redstone=Diese Fassade benötigt ein Redstone-Upgrade.
 text.jabba.facade_hopper=Diese Fassade benötigt ein Trichter-Upgrade.
@@ -74,5 +74,7 @@ text.jabba.waila.key.content=Fassinhalt
 text.jabba.waila.key.quantity=Item-Anzahl
 text.jabba.waila.key.stacks=Max Stacks
 
-text.jabba.tooltip.slots=Slots : 
+text.jabba.tooltip.slots=Slots :
 text.jabba.tooltip.empty=< Leer >
+
+mcp.mobius.betterbarrel=Barrel
