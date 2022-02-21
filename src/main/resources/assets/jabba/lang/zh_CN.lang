@@ -89,3 +89,5 @@ text.jabba.waila.key.stacks=最大组数
 text.jabba.tooltip.slots.used=插槽以使用：
 text.jabba.tooltip.slots.provided=可用插槽数量：
 text.jabba.tooltip.empty=<空>
+
+mcp.mobius.betterbarrel=Barrel
