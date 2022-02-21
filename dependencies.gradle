@@ -5,6 +5,4 @@ dependencies {
 
     compileOnly('com.github.GTNewHorizons:ForestryMC:4.4.6:dev')
     compileOnly('curse.maven:minefactory-reloaded-66672:2366150')
-
-    runtime('com.github.GTNewHorizons:TinkersConstruct:1.9.0.13-GTNH:dev')
 }
