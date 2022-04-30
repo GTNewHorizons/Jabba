@@ -411,7 +411,8 @@ public class StorageLocal implements IBarrelStorage {
 				prevInputStack = null;
 			} else {
 				// fake stack stuff so the inventory appears full in certain mods that do not support the DSU...
-				inputStack = itemTemplate.copy(); // don't rely upon passed in object
+                if(prevInputStack == null)
+				    inputStack = itemTemplate.copy(); // don't rely upon passed in object
 				inputStack.stackSize = stackAmount - (totalCapacity - totalAmount);
 				prevInputStack = inputStack.copy();
 			}
