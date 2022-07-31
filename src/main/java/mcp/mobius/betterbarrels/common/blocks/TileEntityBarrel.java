@@ -669,9 +669,10 @@ public class TileEntityBarrel extends TileEntity implements ISidedInventory, IDe
 	public ItemStack decrStackSize(int islot, int quantity) {
 		TileEntity ent = this.worldObj.getTileEntity(this.xCoord, this.yCoord - 1, this.zCoord);
 		ItemStack stack;
-		if (ent instanceof TileEntityHopper) {
+        //TODO Kotl Remove Code fix dupe
+        /*if (ent instanceof TileEntityHopper) {
 			stack = this.getStorage().decrStackSize_Hopper(islot, quantity);
-		} else if (ent == null) { // not a tile ent, check if a minecart hopper
+		} else */ if (ent == null) { // not a tile ent, check if a minecart hopper
 			if (aabbBlockBelow == null) {
 				aabbBlockBelow = AxisAlignedBB.getBoundingBox(xCoord, yCoord - 1, zCoord, xCoord + 1, yCoord, zCoord + 1);
 			}
@@ -680,9 +681,9 @@ public class TileEntityBarrel extends TileEntity implements ISidedInventory, IDe
 				stack = this.getStorage().decrStackSize_Hopper(islot, quantity);
 			} else {
 				// not a minecart hopper, assume something else...
-				stack = this.getStorage().decrStackSize(islot, quantity); 
+				stack = this.getStorage().decrStackSize(islot, quantity);
 			}
-		} else { // at this point we know there is a valid tile below, and it's not a hopper 
+		} else { // at this point we know there is a valid tile below, and it's not a hopper
 			stack = this.getStorage().decrStackSize(islot, quantity);
 		}
 
