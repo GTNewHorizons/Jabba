@@ -91,7 +91,7 @@ public abstract class TileEntityBaseRenderer extends TileEntitySpecialRenderer {
 	protected void renderStackOnBlock(ItemStack stack, ForgeDirection side, ForgeDirection orientation, Coordinates barrelPos, float size, double posx, double posy){
 		if (stack == null) { return; }
 
-		GL11.glPushAttrib(GL11.GL_ALPHA_TEST | GL11.GL_LIGHTING);
+		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 		GL11.glPushMatrix();
 
 		this.alignRendering(side, orientation, barrelPos);
@@ -108,7 +108,7 @@ public abstract class TileEntityBaseRenderer extends TileEntitySpecialRenderer {
 	protected void renderIconOnBlock(IIcon icon, int sheet,  ForgeDirection side, ForgeDirection orientation, Coordinates barrelPos, float size, double posx, double posy, double zdepth){
 		if (icon == null) { return ; }
 
-        GL11.glPushAttrib(GL11.GL_ALPHA_TEST | GL11.GL_LIGHTING);
+        GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 		GL11.glPushMatrix();
 
 		this.alignRendering(side, orientation, barrelPos);

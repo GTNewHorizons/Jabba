@@ -39,7 +39,7 @@ public class TileEntityBarrelRenderer extends TileEntityBaseRenderer {
 			// the following is how it was set, enabling lighting makes it look better with smooth lighting, mostly... bottom labels are abit dark
 			// will need to actually properly calculate lighting, but for now this looks better on smooth lit barrels than the full bright it was before
 			// found another bug: disabling lighting causes grass to look white, and a few other quirks, putting this on hold for the momment
-            GL11.glPushAttrib(GL11.GL_BLEND | GL11.GL_LIGHTING);
+            GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
             GL11.glDisable(GL11.GL_BLEND);
             GL11.glEnable(GL11.GL_LIGHTING);
 
