@@ -91,7 +91,7 @@ public abstract class TileEntityBaseRenderer extends TileEntitySpecialRenderer {
 	protected void renderStackOnBlock(ItemStack stack, ForgeDirection side, ForgeDirection orientation, Coordinates barrelPos, float size, double posx, double posy){
 		if (stack == null) { return; }
 
-		int[][] savedGLState =saveGLState(new int[]{ GL11.GL_ALPHA_TEST, GL11.GL_LIGHTING });
+		GL11.glPushAttrib(GL11.GL_ALPHA_TEST | GL11.GL_LIGHTING);
 		GL11.glPushMatrix();
 
 		this.alignRendering(side, orientation, barrelPos);
@@ -102,13 +102,13 @@ public abstract class TileEntityBaseRenderer extends TileEntitySpecialRenderer {
 		}
 
 		GL11.glPopMatrix();
-		restoreGlState(savedGLState);
+		GL11.glPopAttrib();
 	}
 
 	protected void renderIconOnBlock(IIcon icon, int sheet,  ForgeDirection side, ForgeDirection orientation, Coordinates barrelPos, float size, double posx, double posy, double zdepth){
 		if (icon == null) { return ; }
 
-		int[][] savedGLState = modifyGLState(new int[]{ GL11.GL_LIGHTING }, new int[]{ GL11.GL_ALPHA_TEST });
+        GL11.glPushAttrib(GL11.GL_ALPHA_TEST | GL11.GL_LIGHTING);
 		GL11.glPushMatrix();
 
 		this.alignRendering(side, orientation, barrelPos);
@@ -118,7 +118,7 @@ public abstract class TileEntityBaseRenderer extends TileEntitySpecialRenderer {
 		this.drawIcon(0, 0, icon, side);
 
 		GL11.glPopMatrix();
-		restoreGlState(savedGLState);
+        GL11.glPopAttrib();
 	}
 
 	protected void renderIconOnBlock(int index,  ForgeDirection side, ForgeDirection orientation, Coordinates barrelPos, float size, double posx, double posy, double zdepth){
@@ -197,22 +197,6 @@ public abstract class TileEntityBaseRenderer extends TileEntitySpecialRenderer {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, boundTexIndex);
 	}
 
-	protected int[][] saveGLState(int[] bitsToSave) {
-		if (bitsToSave == null) { return null; }
-
-		int[][] savedGLState = new int[bitsToSave.length][2];
-		int count = 0;
-
-		for (int glBit : bitsToSave) {
-			savedGLState[count][0] = glBit;
-			savedGLState[count++][1] = GL11.glIsEnabled(glBit) ? 1: 0;
-		}
-		return savedGLState;
-	}
-
-	protected int[][] modifyGLState(int[] bitsToDisable, int[] bitsToEnable) {
-		return modifyGLState(bitsToDisable, bitsToEnable, null);
-	}
 
 	protected int[][] modifyGLState(int[] bitsToDisable, int[] bitsToEnable, int[] bitsToSave) {
 		if (bitsToDisable == null && bitsToEnable == null && bitsToSave == null) { return null; }
