@@ -22,7 +22,6 @@ public class StorageLocal implements IBarrelStorage {
 	private ItemStack outputStack     = null;	// Slot 1
 	private ItemStack prevOutputStack = null;
 	private ItemStack itemTemplate      = null;
-	private ItemStack renderingTemplate = null;
 
 	private int totalAmount   = 0;	//Total number of items
 	private int stackAmount   = 64;	//Number of items in a stack
@@ -60,18 +59,7 @@ public class StorageLocal implements IBarrelStorage {
 	public ItemStack getItem() { return this.itemTemplate; }
 	@Override
 	public ItemStack getItemForRender() {
-		if (this.renderingTemplate == null) {
-			this.renderingTemplate = this.itemTemplate.copy();
-			if (this.renderingTemplate.hasTagCompound() && this.renderingTemplate.getTagCompound().hasKey("ench"))
-				this.renderingTemplate.getTagCompound().removeTag("ench");
-			if (this.renderingTemplate.hasTagCompound() && this.renderingTemplate.getTagCompound().hasKey("CustomPotionEffects"))
-				this.renderingTemplate.getTagCompound().removeTag("CustomPotionEffects");
-			if (this.renderingTemplate.getItem() == Items.potionitem)
-				this.renderingTemplate.setItemDamage(0);
-			if (this.renderingTemplate.getItem() == Items.experience_bottle)
-				this.renderingTemplate = new ItemStack(Items.potionitem, 0, 0);
-		}
-		return this.renderingTemplate;
+		return itemTemplate;
 	}
 
 	@Override
@@ -81,12 +69,9 @@ public class StorageLocal implements IBarrelStorage {
 			this.itemTemplate.stackSize = 0;
 			this.stackAmount = stack.getMaxStackSize();
 			this.cachedBarrelOreItem = new ItemImmut(Item.getIdFromItem(this.itemTemplate.getItem()), this.itemTemplate.getItemDamage());
-			// Force reset the render template
-			this.renderingTemplate = null;
 			this.getItemForRender();
 		} else {
 			this.itemTemplate = null;
-			this.renderingTemplate = null;
 			this.stackAmount = 64;
 			this.cachedBarrelOreItem = null;
 		}
