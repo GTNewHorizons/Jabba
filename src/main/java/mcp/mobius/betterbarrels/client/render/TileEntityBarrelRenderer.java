@@ -39,14 +39,16 @@ public class TileEntityBarrelRenderer extends TileEntityBaseRenderer {
 			// the following is how it was set, enabling lighting makes it look better with smooth lighting, mostly... bottom labels are abit dark
 			// will need to actually properly calculate lighting, but for now this looks better on smooth lit barrels than the full bright it was before
 			// found another bug: disabling lighting causes grass to look white, and a few other quirks, putting this on hold for the momment
-			int[][] savedGLState = modifyGLState(new int[]{ GL11.GL_BLEND, GL11.GL_LIGHTING }, null);
+            GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+            GL11.glDisable(GL11.GL_BLEND);
+            GL11.glEnable(GL11.GL_LIGHTING);
 
 			ForgeDirection orientation    = ((TileEntityBarrel) tileEntity).orientation;
 			ForgeDirection rotation       = ((TileEntityBarrel) tileEntity).rotation;
 			TileEntityBarrel barrelEntity = (TileEntityBarrel)tileEntity;
 			Coordinates barrelPos         = new Coordinates(0, xpos, ypos, zpos);
 
-			boolean isHammer = this.mc.thePlayer.getHeldItem() != null ? this.mc.thePlayer.getHeldItem().getItem() instanceof IOverlayItem ? true : false : false;
+			boolean isHammer = this.mc.thePlayer.getHeldItem() != null && this.mc.thePlayer.getHeldItem().getItem() instanceof IOverlayItem;
 			boolean hasItem  = barrelEntity.getStorage().hasItem();
 
 			int color = StructuralLevel.LEVELS[barrelEntity.coreUpgrades.levelStructural].clientData.getTextColor();
@@ -118,7 +120,7 @@ public class TileEntityBarrelRenderer extends TileEntityBaseRenderer {
 				}
 			}
 
-			this.restoreGlState(savedGLState);
+			GL11.glPopAttrib();
 			this.loadBoundTexture();
 		}
 	}
