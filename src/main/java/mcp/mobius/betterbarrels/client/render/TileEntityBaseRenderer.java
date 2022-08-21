@@ -95,7 +95,7 @@ public abstract class TileEntityBaseRenderer extends TileEntitySpecialRenderer {
 		GL11.glPushMatrix();
 
 		this.alignRendering(side, orientation, barrelPos);
-		this.moveRendering(size, posx, posy, 0);
+		this.moveRendering(size, posx, posy, -0.001);
 
 		if (!ForgeHooksClient.renderInventoryItem(this.renderBlocks, this.texManager, stack, true, 0.0F, 0.0F, 0.0F)) {
 			this.renderItem.renderItemIntoGUI(this.renderFont, this.texManager, stack, 0, 0, true);
