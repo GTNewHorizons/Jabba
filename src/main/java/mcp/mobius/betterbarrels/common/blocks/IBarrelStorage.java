@@ -1,59 +1,78 @@
 package mcp.mobius.betterbarrels.common.blocks;
 
-import cpw.mods.fml.common.Optional;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
+import cpw.mods.fml.common.Optional;
 
 @Optional.Interface(iface = "powercrystals.minefactoryreloaded.api.IDeepStorageUnit", modid = "MineFactoryReloaded")
-public interface IBarrelStorage extends ISidedInventory, IDeepStorageUnit{
+public interface IBarrelStorage extends ISidedInventory, IDeepStorageUnit {
 
-	public boolean   hasItem();
-	public ItemStack getItem();
-	public ItemStack getItemForRender();
-	public void      setItem(ItemStack stack);
-	public boolean   sameItem(ItemStack stack);
+    public boolean hasItem();
 
-	/* STORAGE HANDLING */
-	public int  getAmount();
-	public void setAmount(int amount);
-	public int  getMaxStacks();
-	public void setBaseStacks(int basestacks);
+    public ItemStack getItem();
 
-	/* NBT MANIPULATION */
-	public NBTTagCompound writeTagCompound();
-	public void readTagCompound(NBTTagCompound tag);
+    public ItemStack getItemForRender();
 
-	/* MANUAL STACK */
-	public int       addStack(ItemStack stack);
-	public ItemStack getStack();
-	public ItemStack getStack(int amount);
+    public void setItem(ItemStack stack);
 
-	/* STATUS MANIPULATION */
-	public boolean switchGhosting();
-	public boolean isGhosting();
-	public void    setGhosting(boolean locked);
+    public boolean sameItem(ItemStack stack);
 
-	public boolean isVoid();
-	public void    setVoid(boolean delete);
+    /* STORAGE HANDLING */
+    public int getAmount();
 
-	public boolean isCreative();
-	public void    setCreative(boolean delete);
+    public void setAmount(int amount);
 
-	//public void    upgCapacity(int level);
-	public void    addStorageUpgrade();
-	public void    rmStorageUpgrade();
+    public int getMaxStacks();
 
-	public ItemStack decrStackSize_Hopper(int slot, int quantity);
+    public void setBaseStacks(int basestacks);
 
-	// Provide IDeepStorageUnit methods, even when the interface is stripped
-	@Override
-	ItemStack getStoredItemType();
-	@Override
-	void setStoredItemCount(int var1);
-	@Override
-	void setStoredItemType(ItemStack var1, int var2);
-	@Override
-	int getMaxStoredCount();
+    /* NBT MANIPULATION */
+    public NBTTagCompound writeTagCompound();
+
+    public void readTagCompound(NBTTagCompound tag);
+
+    /* MANUAL STACK */
+    public int addStack(ItemStack stack);
+
+    public ItemStack getStack();
+
+    public ItemStack getStack(int amount);
+
+    /* STATUS MANIPULATION */
+    public boolean switchGhosting();
+
+    public boolean isGhosting();
+
+    public void setGhosting(boolean locked);
+
+    public boolean isVoid();
+
+    public void setVoid(boolean delete);
+
+    public boolean isCreative();
+
+    public void setCreative(boolean delete);
+
+    // public void upgCapacity(int level);
+    public void addStorageUpgrade();
+
+    public void rmStorageUpgrade();
+
+    public ItemStack decrStackSize_Hopper(int slot, int quantity);
+
+    // Provide IDeepStorageUnit methods, even when the interface is stripped
+    @Override
+    ItemStack getStoredItemType();
+
+    @Override
+    void setStoredItemCount(int var1);
+
+    @Override
+    void setStoredItemType(ItemStack var1, int var2);
+
+    @Override
+    int getMaxStoredCount();
 }

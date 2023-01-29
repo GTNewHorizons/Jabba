@@ -13,6 +13,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
+
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -23,30 +24,33 @@ import org.lwjgl.opengl.GL11;
  */
 public class SurfaceItemRenderer extends RenderItem {
 
-    private static final ResourceLocation RES_ITEM_GLINT = new ResourceLocation("textures/misc/enchanted_item_glint.png");
+    private static final ResourceLocation RES_ITEM_GLINT = new ResourceLocation(
+            "textures/misc/enchanted_item_glint.png");
 
     private RenderBlocks renderBlocksRi = new RenderBlocks();
 
     @Override
-    public byte getMiniBlockCount (ItemStack stack, byte original) {
+    public byte getMiniBlockCount(ItemStack stack, byte original) {
         return 1;
     }
 
     @Override
-    public boolean shouldBob () {
+    public boolean shouldBob() {
         return false;
     }
 
     @Override
-    public boolean shouldSpreadItems () {
+    public boolean shouldSpreadItems() {
         return false;
     }
 
     // The default Mojang code for item render does not handle glinted or multi-pass items gracefully in a non-UI
-    // setting.  This modified implementation will render these items without unsightly Z-fighting.
+    // setting. This modified implementation will render these items without unsightly Z-fighting.
     @Override
-    public void renderItemIntoGUI (FontRenderer fontRenderer, TextureManager texManager, ItemStack itemStack, int x, int y, boolean renderEffect) {
-        if (itemStack.getItemSpriteNumber() == 0 && RenderBlocks.renderItemIn3d(Block.getBlockFromItem(itemStack.getItem()).getRenderType())) {
+    public void renderItemIntoGUI(FontRenderer fontRenderer, TextureManager texManager, ItemStack itemStack, int x,
+            int y, boolean renderEffect) {
+        if (itemStack.getItemSpriteNumber() == 0
+                && RenderBlocks.renderItemIn3d(Block.getBlockFromItem(itemStack.getItem()).getRenderType())) {
             renderItemIntoGUIBlock(fontRenderer, texManager, itemStack, x, y, renderEffect);
             return;
         }
@@ -55,27 +59,24 @@ public class SurfaceItemRenderer extends RenderItem {
         int meta = itemStack.getItemDamage();
 
         ResourceLocation loc = itemStack.getItem().requiresMultipleRenderPasses()
-            ? (item.getSpriteNumber() == 0 ? TextureMap.locationBlocksTexture : TextureMap.locationItemsTexture)
-            : (texManager.getResourceLocation(itemStack.getItemSpriteNumber()));
+                ? (item.getSpriteNumber() == 0 ? TextureMap.locationBlocksTexture : TextureMap.locationItemsTexture)
+                : (texManager.getResourceLocation(itemStack.getItemSpriteNumber()));
 
         for (int i = 0; i < item.getRenderPasses(meta); ++i) {
             OpenGlHelper.glBlendFunc(770, 771, 1, 0);
             texManager.bindTexture(loc);
 
-            IIcon icon = itemStack.getItem().requiresMultipleRenderPasses()
-                ? item.getIcon(itemStack, i)
-                : itemStack.getIconIndex();
+            IIcon icon = itemStack.getItem().requiresMultipleRenderPasses() ? item.getIcon(itemStack, i)
+                    : itemStack.getIconIndex();
 
-            if (icon == null)
-                continue;
+            if (icon == null) continue;
 
             int color = itemStack.getItem().getColorFromItemStack(itemStack, i);
-            float r = (float)(color >> 16 & 255) / 255.0F;
-            float g = (float)(color >> 8 & 255) / 255.0F;
-            float b = (float)(color & 255) / 255.0F;
+            float r = (float) (color >> 16 & 255) / 255.0F;
+            float g = (float) (color >> 8 & 255) / 255.0F;
+            float b = (float) (color & 255) / 255.0F;
 
-            if (renderWithColor)
-                GL11.glColor4f(r, g, b, 1.0F);
+            if (renderWithColor) GL11.glColor4f(r, g, b, 1.0F);
 
             GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
             GL11.glPolygonOffset(-1f, -1);
@@ -90,15 +91,14 @@ public class SurfaceItemRenderer extends RenderItem {
             GL11.glDisable(GL11.GL_BLEND);
             GL11.glEnable(GL11.GL_LIGHTING);
 
-            if (renderEffect && itemStack.hasEffect(i))
-                renderEffect(texManager, x, y);
+            if (renderEffect && itemStack.hasEffect(i)) renderEffect(texManager, x, y);
 
             GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
         }
     }
 
     @Override
-    public void renderEffect (TextureManager manager, int x, int y) {
+    public void renderEffect(TextureManager manager, int x, int y) {
         GL11.glDepthFunc(GL11.GL_EQUAL);
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glDepthMask(false);
@@ -114,10 +114,8 @@ public class SurfaceItemRenderer extends RenderItem {
         GL11.glDepthFunc(GL11.GL_LEQUAL);
     }
 
-    private void renderGlint (int x, int y, int w, int h)
-    {
-        for (int i = 0; i < 2; ++i)
-        {
+    private void renderGlint(int x, int y, int w, int h) {
+        for (int i = 0; i < 2; ++i) {
             OpenGlHelper.glBlendFunc(772, 1, 0, 0);
             float uScale = 0.00390625F;
             float vScale = 0.00390625F;
@@ -128,15 +126,21 @@ public class SurfaceItemRenderer extends RenderItem {
 
             Tessellator tessellator = Tessellator.instance;
             tessellator.startDrawingQuads();
-            tessellator.addVertexWithUV(x + 0, y + h, 0, (u + (float)h * hScale) * uScale, (v + (float)h) * vScale);
-            tessellator.addVertexWithUV(x + w, y + h, 0, (u + (float)w + (float)h * hScale) * uScale, (v + (float)h) * vScale);
-            tessellator.addVertexWithUV(x + w, y + 0, 0, (u + (float)w) * uScale, (v + 0.0F) * vScale);
+            tessellator.addVertexWithUV(x + 0, y + h, 0, (u + (float) h * hScale) * uScale, (v + (float) h) * vScale);
+            tessellator.addVertexWithUV(
+                    x + w,
+                    y + h,
+                    0,
+                    (u + (float) w + (float) h * hScale) * uScale,
+                    (v + (float) h) * vScale);
+            tessellator.addVertexWithUV(x + w, y + 0, 0, (u + (float) w) * uScale, (v + 0.0F) * vScale);
             tessellator.addVertexWithUV(x + 0, y + 0, 0, (u + 0.0F) * uScale, (v + 0.0F) * vScale);
             tessellator.draw();
         }
     }
 
-    private void renderItemIntoGUIBlock (FontRenderer fontRenderer, TextureManager texManager, ItemStack itemStack, int x, int y, boolean renderEffect) {
+    private void renderItemIntoGUIBlock(FontRenderer fontRenderer, TextureManager texManager, ItemStack itemStack,
+            int x, int y, boolean renderEffect) {
         texManager.bindTexture(TextureMap.locationBlocksTexture);
         Block block = Block.getBlockFromItem(itemStack.getItem());
 
@@ -144,8 +148,7 @@ public class SurfaceItemRenderer extends RenderItem {
             GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
             GL11.glEnable(GL11.GL_BLEND);
             OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-        }
-        else {
+        } else {
             GL11.glAlphaFunc(GL11.GL_GREATER, 0.5F);
             GL11.glDisable(GL11.GL_BLEND);
         }
@@ -159,12 +162,11 @@ public class SurfaceItemRenderer extends RenderItem {
         GL11.glRotatef(45, 0, 1, 0);
 
         int color = itemStack.getItem().getColorFromItemStack(itemStack, 0);
-        float r = (float)(color >> 16 & 255) / 255.0F;
-        float g = (float)(color >> 8 & 255) / 255.0F;
-        float b = (float)(color & 255) / 255.0F;
+        float r = (float) (color >> 16 & 255) / 255.0F;
+        float g = (float) (color >> 8 & 255) / 255.0F;
+        float b = (float) (color & 255) / 255.0F;
 
-        if (this.renderWithColor)
-            GL11.glColor4f(r * 1, g * 1, b * 1, 1.0F);
+        if (this.renderWithColor) GL11.glColor4f(r * 1, g * 1, b * 1, 1.0F);
 
         GL11.glRotatef(-90, 0, 1, 0);
         GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
@@ -176,8 +178,7 @@ public class SurfaceItemRenderer extends RenderItem {
 
         GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
 
-        if (block.getRenderBlockPass() == 0)
-            GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
+        if (block.getRenderBlockPass() == 0) GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
 
         GL11.glPopMatrix();
     }
