@@ -58,6 +58,8 @@ public class ItemBarrelMover extends Item {
     }
 
     static {
+        classExtensionsNames.add("appeng.tile.storage.TileSkyChest");
+
         classExtensionsNames.add("cpw.mods.ironchest.TileEntityIronChest");
 
         classExtensionsNames.add("buildcraft.energy.TileEngine");
@@ -229,6 +231,10 @@ public class ItemBarrelMover extends Item {
         /* Vanilla chest */
         if (TEClassName.contains("net.minecraft.tileentity.TileEntityChest"))
             blockMeta = this.getBarrelOrientationOnPlacement(player).ordinal();
+
+        /* AE2 sky stone chest orientation correction */
+        if (TEClassName.contains("appeng.tile.storage.TileSkyChest") && nbtContainer.hasKey("orientation_forward"))
+            nbtContainer.setString("orientation_forward", this.getBarrelOrientationOnPlacement(player).toString());
 
         /* Buildcraft engines orientation correction */
         if (TEClassName.contains("buildcraft.energy.TileEngine") && nbtContainer.hasKey("orientation"))
