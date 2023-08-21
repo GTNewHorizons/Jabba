@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import mcp.mobius.betterbarrels.BetterBarrels;
 import mcp.mobius.betterbarrels.Utils;
@@ -16,6 +17,7 @@ import mcp.mobius.betterbarrels.network.BarrelPacketHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -27,6 +29,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -42,6 +45,7 @@ public class ItemBarrelMover extends Item {
     protected IIcon text_empty = null;
     protected IIcon text_filled = null;
     protected DollyType type = DollyType.NORMAL;
+    protected boolean preventFold = false;
 
     protected static ArrayList<Class> classExtensions = new ArrayList<Class>();
     protected static ArrayList<String> classExtensionsNames = new ArrayList<String>();
@@ -177,10 +181,41 @@ public class ItemBarrelMover extends Item {
         }
 
         if (stack.hasTagCompound() && stack.getTagCompound().hasKey("Container")) {
+            preventFold = true;
             return this.placeContainer(stack, player, world, x, y, z, side);
         }
 
         return false;
+    }
+
+    @Override
+    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
+        if (world.isRemote) {
+            return itemStack;
+        }
+
+        // This prevents the dolly from folding after sneak right-clicking to place an item.
+        if (preventFold) {
+            preventFold = false;
+            return itemStack;
+        }
+
+        if (player.isSneaking() && type == DollyType.NORMAL
+                && (!itemStack.hasTagCompound() || !itemStack.getTagCompound().hasKey("Container"))) {
+            // Diamond dollies can't be folded because they can be damaged.
+            final EntityItem newItem = new EntityItem(
+                    world,
+                    player.posX,
+                    player.posY,
+                    player.posZ,
+                    new ItemStack(BetterBarrels.itemFoldedMover, 1));
+            newItem.delayBeforeCanPickup = 0;
+            world.spawnEntityInWorld(newItem);
+
+            itemStack.stackSize -= 1;
+        }
+
+        return itemStack;
     }
 
     protected boolean placeContainer(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side) {
@@ -641,6 +676,18 @@ public class ItemBarrelMover extends Item {
 
             ((EntityPlayer) entity).addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 10, amplifier));
             ((EntityPlayer) entity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 10, amplifier));
+        }
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Override
+    public void addInformation(ItemStack itemStack, EntityPlayer player, List tooltip, boolean p_77624_4_) {
+        super.addInformation(itemStack, player, tooltip, p_77624_4_);
+
+        if (type == DollyType.NORMAL
+                && (!itemStack.hasTagCompound() || !itemStack.getTagCompound().hasKey("Container"))) {
+            tooltip.add(StatCollector.translateToLocal("item.dolly.folding_hint.1"));
+            tooltip.add(StatCollector.translateToLocal("item.dolly.folding_hint.2"));
         }
     }
 

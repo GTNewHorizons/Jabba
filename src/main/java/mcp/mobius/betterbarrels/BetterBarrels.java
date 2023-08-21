@@ -12,6 +12,7 @@ import mcp.mobius.betterbarrels.common.items.ItemBarrelHammer;
 import mcp.mobius.betterbarrels.common.items.ItemTuningFork;
 import mcp.mobius.betterbarrels.common.items.dolly.ItemBarrelMover;
 import mcp.mobius.betterbarrels.common.items.dolly.ItemDiamondMover;
+import mcp.mobius.betterbarrels.common.items.dolly.ItemFoldedBarrelMover;
 import mcp.mobius.betterbarrels.common.items.upgrades.ItemUpgradeCore;
 import mcp.mobius.betterbarrels.common.items.upgrades.ItemUpgradeSide;
 import mcp.mobius.betterbarrels.common.items.upgrades.ItemUpgradeStructural;
@@ -86,6 +87,7 @@ public class BetterBarrels {
     public static Item itemLockingPlanks = null;
     public static Item itemHammer = null;
 
+    public static Item itemFoldedMover = null;
     public static long limiterDelay = 500;
 
     public static int blockBarrelRendererID = -1;
@@ -257,6 +259,7 @@ public class BetterBarrels {
         itemMoverDiamond = new ItemDiamondMover();
         itemHammer = new ItemBarrelHammer();
         itemTuningFork = new ItemTuningFork();
+        itemFoldedMover = new ItemFoldedBarrelMover();
 
         GameRegistry.registerBlock(blockBarrel, "barrel");
         // GameRegistry.registerBlock(blockMiniBarrel);
@@ -268,6 +271,7 @@ public class BetterBarrels {
         GameRegistry.registerItem(itemUpgradeCore, "upgradeCore");
         GameRegistry.registerItem(itemUpgradeSide, "upgradeSide");
         GameRegistry.registerItem(itemMover, "mover");
+        GameRegistry.registerItem(itemFoldedMover, "moverFolded");
         GameRegistry.registerItem(itemMoverDiamond, "moverDiamond");
         GameRegistry.registerItem(itemHammer, "hammer");
         GameRegistry.registerItem(itemTuningFork, "tuningFork");

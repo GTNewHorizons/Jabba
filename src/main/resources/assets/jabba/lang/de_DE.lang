@@ -34,8 +34,12 @@ item.hammer.void.name=Barrel Hammer(Leere)
 
 item.dolly.normal.empty.name=Transportwagen
 item.dolly.normal.full.name=Transportwagen (Voll)
+item.dolly.normal.folded.name=Transportwagen (Gefaltet)
 item.dolly.diamond.empty.name=Diamant-Transportwagen
 item.dolly.diamond.full.name=Diamant-Transportwagen (Voll)
+item.dolly.folding_hint.1=Schleichend rechtsklicken zum Zusammenklappen
+item.dolly.folding_hint.2=Zusammengeklappte Transportwagen können in Truhen und Rucksäcken verstaut werden
+item.dolly.folded_hint=Ausklappen mit Rechtsklick
 item.fork.name=B-Space-Stimmgabel
 
 tile.blockbarrel.name=Besseres Fass
