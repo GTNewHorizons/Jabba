@@ -45,8 +45,8 @@ public class ItemBarrelMover extends Item {
     protected IIcon text_empty = null;
     protected IIcon text_filled = null;
     protected DollyType type = DollyType.NORMAL;
-    protected boolean preventFold = false;
 
+    private static final String PREVENT_FOLD_TAG_KEY = "prevent_fold";
     protected static ArrayList<Class> classExtensions = new ArrayList<Class>();
     protected static ArrayList<String> classExtensionsNames = new ArrayList<String>();
     protected static HashMap<String, Class> classMap = new HashMap<String, Class>();
@@ -181,7 +181,7 @@ public class ItemBarrelMover extends Item {
         }
 
         if (stack.hasTagCompound() && stack.getTagCompound().hasKey("Container")) {
-            preventFold = true;
+            stack.getTagCompound().setBoolean(PREVENT_FOLD_TAG_KEY, true);
             return this.placeContainer(stack, player, world, x, y, z, side);
         }
 
@@ -195,8 +195,8 @@ public class ItemBarrelMover extends Item {
         }
 
         // This prevents the dolly from folding after sneak right-clicking to place an item.
-        if (preventFold) {
-            preventFold = false;
+        if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey(PREVENT_FOLD_TAG_KEY)) {
+            itemStack.getTagCompound().removeTag(PREVENT_FOLD_TAG_KEY);
             return itemStack;
         }
 
