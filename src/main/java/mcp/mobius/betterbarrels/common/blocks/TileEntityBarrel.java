@@ -3,6 +3,23 @@ package mcp.mobius.betterbarrels.common.blocks;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.command.IEntitySelector;
+import net.minecraft.entity.item.EntityMinecartHopper;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.Packet;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MathHelper;
+import net.minecraftforge.common.util.ForgeDirection;
+
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+import cpw.mods.fml.relauncher.Side;
 import mcp.mobius.betterbarrels.BetterBarrels;
 import mcp.mobius.betterbarrels.ServerTickHandler;
 import mcp.mobius.betterbarrels.Utils;
@@ -25,25 +42,7 @@ import mcp.mobius.betterbarrels.network.Message0x04Structuralupdate;
 import mcp.mobius.betterbarrels.network.Message0x05CoreUpdate;
 import mcp.mobius.betterbarrels.network.Message0x06FullStorage;
 import mcp.mobius.betterbarrels.network.Message0x08LinkUpdate;
-
-import net.minecraft.command.IEntitySelector;
-import net.minecraft.entity.item.EntityMinecartHopper;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MathHelper;
-import net.minecraftforge.common.util.ForgeDirection;
-
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
-import cpw.mods.fml.relauncher.Side;
 
 @Optional.Interface(iface = "powercrystals.minefactoryreloaded.api.IDeepStorageUnit", modid = "MineFactoryReloaded")
 public class TileEntityBarrel extends TileEntity implements ISidedInventory, IDeepStorageUnit {

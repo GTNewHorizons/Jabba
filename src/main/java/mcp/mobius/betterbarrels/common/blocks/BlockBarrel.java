@@ -2,14 +2,6 @@ package mcp.mobius.betterbarrels.common.blocks;
 
 import java.util.Random;
 
-import mcp.mobius.betterbarrels.BetterBarrels;
-import mcp.mobius.betterbarrels.Utils;
-import mcp.mobius.betterbarrels.bspace.BSpaceStorageHandler;
-import mcp.mobius.betterbarrels.common.JabbaCreativeTab;
-import mcp.mobius.betterbarrels.common.StructuralLevel;
-import mcp.mobius.betterbarrels.common.items.upgrades.UpgradeCore;
-import mcp.mobius.betterbarrels.common.items.upgrades.UpgradeSide;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.MapColor;
@@ -33,6 +25,13 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import mcp.mobius.betterbarrels.BetterBarrels;
+import mcp.mobius.betterbarrels.Utils;
+import mcp.mobius.betterbarrels.bspace.BSpaceStorageHandler;
+import mcp.mobius.betterbarrels.common.JabbaCreativeTab;
+import mcp.mobius.betterbarrels.common.StructuralLevel;
+import mcp.mobius.betterbarrels.common.items.upgrades.UpgradeCore;
+import mcp.mobius.betterbarrels.common.items.upgrades.UpgradeSide;
 
 public class BlockBarrel extends BlockContainer {
 

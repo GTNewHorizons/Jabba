@@ -4,8 +4,8 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import cpw.mods.fml.common.Optional;
+import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 
 @Optional.Interface(iface = "powercrystals.minefactoryreloaded.api.IDeepStorageUnit", modid = "MineFactoryReloaded")
 public interface IBarrelStorage extends ISidedInventory, IDeepStorageUnit {

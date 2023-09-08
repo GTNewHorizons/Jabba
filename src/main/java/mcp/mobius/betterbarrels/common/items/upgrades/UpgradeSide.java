@@ -1,8 +1,8 @@
 package mcp.mobius.betterbarrels.common.items.upgrades;
 
-import mcp.mobius.betterbarrels.BetterBarrels;
-
 import net.minecraft.item.Item;
+
+import mcp.mobius.betterbarrels.BetterBarrels;
 
 public class UpgradeSide {
 

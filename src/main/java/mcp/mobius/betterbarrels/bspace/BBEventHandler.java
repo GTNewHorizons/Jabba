@@ -1,10 +1,5 @@
 package mcp.mobius.betterbarrels.bspace;
 
-import mcp.mobius.betterbarrels.common.items.dolly.ItemBarrelMover;
-import mcp.mobius.betterbarrels.common.items.upgrades.ItemUpgradeCore;
-import mcp.mobius.betterbarrels.common.items.upgrades.ItemUpgradeStructural;
-import mcp.mobius.betterbarrels.common.items.upgrades.UpgradeCore;
-
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,6 +9,10 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.world.WorldEvent;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import mcp.mobius.betterbarrels.common.items.dolly.ItemBarrelMover;
+import mcp.mobius.betterbarrels.common.items.upgrades.ItemUpgradeCore;
+import mcp.mobius.betterbarrels.common.items.upgrades.ItemUpgradeStructural;
+import mcp.mobius.betterbarrels.common.items.upgrades.UpgradeCore;
 
 public class BBEventHandler {
 

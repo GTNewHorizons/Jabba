@@ -2,8 +2,6 @@ package mcp.mobius.betterbarrels.common.items.upgrades;
 
 import java.util.List;
 
-import mcp.mobius.betterbarrels.BetterBarrels;
-
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -12,6 +10,7 @@ import net.minecraft.util.IIcon;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import mcp.mobius.betterbarrels.BetterBarrels;
 
 public class ItemUpgradeSide extends ItemUpgrade {
 

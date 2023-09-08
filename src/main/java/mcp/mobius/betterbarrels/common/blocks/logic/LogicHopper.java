@@ -1,17 +1,16 @@
 package mcp.mobius.betterbarrels.common.blocks.logic;
 
-import mcp.mobius.betterbarrels.common.blocks.IBarrelStorage;
-import mcp.mobius.betterbarrels.common.blocks.TileEntityBarrel;
-import mcp.mobius.betterbarrels.common.items.upgrades.UpgradeSide;
-
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import cpw.mods.fml.common.Loader;
+import mcp.mobius.betterbarrels.common.blocks.IBarrelStorage;
+import mcp.mobius.betterbarrels.common.blocks.TileEntityBarrel;
+import mcp.mobius.betterbarrels.common.items.upgrades.UpgradeSide;
+import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 
 public enum LogicHopper {
 

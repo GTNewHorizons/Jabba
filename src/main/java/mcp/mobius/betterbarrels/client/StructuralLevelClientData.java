@@ -6,10 +6,6 @@ import java.lang.reflect.Method;
 
 import javax.imageio.ImageIO;
 
-import mcp.mobius.betterbarrels.BetterBarrels;
-import mcp.mobius.betterbarrels.Utils;
-import mcp.mobius.betterbarrels.common.StructuralLevel;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -27,6 +23,9 @@ import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import mcp.mobius.betterbarrels.BetterBarrels;
+import mcp.mobius.betterbarrels.Utils;
+import mcp.mobius.betterbarrels.common.StructuralLevel;
 
 public class StructuralLevelClientData {
 

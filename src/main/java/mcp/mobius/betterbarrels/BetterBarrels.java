@@ -3,21 +3,6 @@ package mcp.mobius.betterbarrels;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import mcp.mobius.betterbarrels.bspace.BSpaceStorageHandler;
-import mcp.mobius.betterbarrels.common.BaseProxy;
-import mcp.mobius.betterbarrels.common.StructuralLevel;
-import mcp.mobius.betterbarrels.common.blocks.BlockBarrel;
-import mcp.mobius.betterbarrels.common.blocks.TileEntityBarrel;
-import mcp.mobius.betterbarrels.common.items.ItemBarrelHammer;
-import mcp.mobius.betterbarrels.common.items.ItemTuningFork;
-import mcp.mobius.betterbarrels.common.items.dolly.ItemBarrelMover;
-import mcp.mobius.betterbarrels.common.items.dolly.ItemDiamondMover;
-import mcp.mobius.betterbarrels.common.items.dolly.ItemFoldedBarrelMover;
-import mcp.mobius.betterbarrels.common.items.upgrades.ItemUpgradeCore;
-import mcp.mobius.betterbarrels.common.items.upgrades.ItemUpgradeSide;
-import mcp.mobius.betterbarrels.common.items.upgrades.ItemUpgradeStructural;
-import mcp.mobius.betterbarrels.network.BarrelPacketHandler;
-
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
@@ -36,6 +21,20 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
+import mcp.mobius.betterbarrels.bspace.BSpaceStorageHandler;
+import mcp.mobius.betterbarrels.common.BaseProxy;
+import mcp.mobius.betterbarrels.common.StructuralLevel;
+import mcp.mobius.betterbarrels.common.blocks.BlockBarrel;
+import mcp.mobius.betterbarrels.common.blocks.TileEntityBarrel;
+import mcp.mobius.betterbarrels.common.items.ItemBarrelHammer;
+import mcp.mobius.betterbarrels.common.items.ItemTuningFork;
+import mcp.mobius.betterbarrels.common.items.dolly.ItemBarrelMover;
+import mcp.mobius.betterbarrels.common.items.dolly.ItemDiamondMover;
+import mcp.mobius.betterbarrels.common.items.dolly.ItemFoldedBarrelMover;
+import mcp.mobius.betterbarrels.common.items.upgrades.ItemUpgradeCore;
+import mcp.mobius.betterbarrels.common.items.upgrades.ItemUpgradeSide;
+import mcp.mobius.betterbarrels.common.items.upgrades.ItemUpgradeStructural;
+import mcp.mobius.betterbarrels.network.BarrelPacketHandler;
 
 @Mod(
         modid = BetterBarrels.modid,

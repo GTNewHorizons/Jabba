@@ -4,17 +4,17 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import mcp.mobius.betterbarrels.BetterBarrels;
-import mcp.mobius.betterbarrels.common.blocks.logic.Coordinates;
-import mcp.mobius.betterbarrels.common.blocks.logic.ItemImmut;
-import mcp.mobius.betterbarrels.common.blocks.logic.OreDictPair;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
+
+import mcp.mobius.betterbarrels.BetterBarrels;
+import mcp.mobius.betterbarrels.common.blocks.logic.Coordinates;
+import mcp.mobius.betterbarrels.common.blocks.logic.ItemImmut;
+import mcp.mobius.betterbarrels.common.blocks.logic.OreDictPair;
 
 public class StorageLocal implements IBarrelStorage {
 

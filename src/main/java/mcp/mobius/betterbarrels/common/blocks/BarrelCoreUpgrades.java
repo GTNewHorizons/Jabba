@@ -3,6 +3,14 @@ package mcp.mobius.betterbarrels.common.blocks;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MathHelper;
+import net.minecraftforge.common.util.ForgeDirection;
+
 import mcp.mobius.betterbarrels.BetterBarrels;
 import mcp.mobius.betterbarrels.Utils;
 import mcp.mobius.betterbarrels.bspace.BSpaceStorageHandler;
@@ -14,14 +22,6 @@ import mcp.mobius.betterbarrels.network.BarrelPacketHandler;
 import mcp.mobius.betterbarrels.network.Message0x04Structuralupdate;
 import mcp.mobius.betterbarrels.network.Message0x05CoreUpdate;
 import mcp.mobius.betterbarrels.network.Message0x06FullStorage;
-
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.MathHelper;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class BarrelCoreUpgrades {
 

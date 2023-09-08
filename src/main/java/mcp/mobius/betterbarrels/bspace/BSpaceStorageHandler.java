@@ -11,13 +11,6 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.zip.ZipException;
 
-import mcp.mobius.betterbarrels.BetterBarrels;
-import mcp.mobius.betterbarrels.ServerTickHandler;
-import mcp.mobius.betterbarrels.common.blocks.IBarrelStorage;
-import mcp.mobius.betterbarrels.common.blocks.StorageLocal;
-import mcp.mobius.betterbarrels.common.blocks.TileEntityBarrel;
-import mcp.mobius.betterbarrels.common.blocks.logic.Coordinates;
-
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -29,6 +22,12 @@ import org.apache.logging.log4j.Level;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
+import mcp.mobius.betterbarrels.BetterBarrels;
+import mcp.mobius.betterbarrels.ServerTickHandler;
+import mcp.mobius.betterbarrels.common.blocks.IBarrelStorage;
+import mcp.mobius.betterbarrels.common.blocks.StorageLocal;
+import mcp.mobius.betterbarrels.common.blocks.TileEntityBarrel;
+import mcp.mobius.betterbarrels.common.blocks.logic.Coordinates;
 
 public class BSpaceStorageHandler {
 

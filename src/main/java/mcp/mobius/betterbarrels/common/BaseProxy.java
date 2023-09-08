@@ -1,10 +1,10 @@
 package mcp.mobius.betterbarrels.common;
 
-import mcp.mobius.betterbarrels.bspace.BBEventHandler;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
+
+import mcp.mobius.betterbarrels.bspace.BBEventHandler;
 
 public class BaseProxy {
 

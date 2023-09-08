@@ -3,9 +3,6 @@ package mcp.mobius.betterbarrels.network;
 import java.io.IOException;
 import java.util.EnumMap;
 
-import mcp.mobius.betterbarrels.BetterBarrels;
-import mcp.mobius.betterbarrels.common.LocalizedChat;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -23,6 +20,8 @@ import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
+import mcp.mobius.betterbarrels.BetterBarrels;
+import mcp.mobius.betterbarrels.common.LocalizedChat;
 
 public enum BarrelPacketHandler {
 

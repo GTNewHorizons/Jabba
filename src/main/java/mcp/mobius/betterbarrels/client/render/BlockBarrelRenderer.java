@@ -1,9 +1,5 @@
 package mcp.mobius.betterbarrels.client.render;
 
-import mcp.mobius.betterbarrels.BetterBarrels;
-import mcp.mobius.betterbarrels.common.StructuralLevel;
-import mcp.mobius.betterbarrels.common.blocks.TileEntityBarrel;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -13,6 +9,9 @@ import net.minecraft.world.IBlockAccess;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import mcp.mobius.betterbarrels.BetterBarrels;
+import mcp.mobius.betterbarrels.common.StructuralLevel;
+import mcp.mobius.betterbarrels.common.blocks.TileEntityBarrel;
 
 public class BlockBarrelRenderer implements ISimpleBlockRenderingHandler {
 

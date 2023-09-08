@@ -7,13 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import mcp.mobius.betterbarrels.BetterBarrels;
-import mcp.mobius.betterbarrels.Utils;
-import mcp.mobius.betterbarrels.common.JabbaCreativeTab;
-import mcp.mobius.betterbarrels.common.LocalizedChat;
-import mcp.mobius.betterbarrels.common.blocks.TileEntityBarrel;
-import mcp.mobius.betterbarrels.network.BarrelPacketHandler;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
@@ -39,6 +32,12 @@ import cpw.mods.fml.common.registry.GameData;
 import forestry.factory.recipes.MemorizedRecipe;
 import forestry.factory.recipes.RecipeMemory;
 import forestry.factory.tiles.TileWorktable;
+import mcp.mobius.betterbarrels.BetterBarrels;
+import mcp.mobius.betterbarrels.Utils;
+import mcp.mobius.betterbarrels.common.JabbaCreativeTab;
+import mcp.mobius.betterbarrels.common.LocalizedChat;
+import mcp.mobius.betterbarrels.common.blocks.TileEntityBarrel;
+import mcp.mobius.betterbarrels.network.BarrelPacketHandler;
 
 public class ItemBarrelMover extends Item {
 

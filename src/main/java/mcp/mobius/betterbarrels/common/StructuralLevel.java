@@ -1,12 +1,11 @@
 package mcp.mobius.betterbarrels.common;
 
-import mcp.mobius.betterbarrels.BetterBarrels;
-import mcp.mobius.betterbarrels.Utils;
-
 import net.minecraft.util.MathHelper;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import mcp.mobius.betterbarrels.BetterBarrels;
+import mcp.mobius.betterbarrels.Utils;
 
 public class StructuralLevel {
 

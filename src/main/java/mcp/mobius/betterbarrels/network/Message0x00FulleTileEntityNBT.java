@@ -1,13 +1,12 @@
 package mcp.mobius.betterbarrels.network;
 
-import mcp.mobius.betterbarrels.common.blocks.TileEntityBarrel;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import mcp.mobius.betterbarrels.common.blocks.TileEntityBarrel;
 
 public class Message0x00FulleTileEntityNBT extends SimpleChannelInboundHandler<Message0x00FulleTileEntityNBT>
         implements IBarrelMessage {

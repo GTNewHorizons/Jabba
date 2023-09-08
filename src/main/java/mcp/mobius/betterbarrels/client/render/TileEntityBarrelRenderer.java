@@ -1,5 +1,11 @@
 package mcp.mobius.betterbarrels.client.render;
 
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
+
+import org.lwjgl.opengl.GL11;
+
 import mcp.mobius.betterbarrels.BetterBarrels;
 import mcp.mobius.betterbarrels.common.StructuralLevel;
 import mcp.mobius.betterbarrels.common.blocks.TileEntityBarrel;
@@ -7,12 +13,6 @@ import mcp.mobius.betterbarrels.common.blocks.logic.Coordinates;
 import mcp.mobius.betterbarrels.common.items.IOverlayItem;
 import mcp.mobius.betterbarrels.common.items.upgrades.UpgradeCore;
 import mcp.mobius.betterbarrels.common.items.upgrades.UpgradeSide;
-
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
-
-import org.lwjgl.opengl.GL11;
 
 public class TileEntityBarrelRenderer extends TileEntityBaseRenderer {
 

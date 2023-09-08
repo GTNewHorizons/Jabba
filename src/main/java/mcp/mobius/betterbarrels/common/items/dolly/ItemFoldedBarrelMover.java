@@ -2,9 +2,6 @@ package mcp.mobius.betterbarrels.common.items.dolly;
 
 import java.util.List;
 
-import mcp.mobius.betterbarrels.BetterBarrels;
-import mcp.mobius.betterbarrels.common.JabbaCreativeTab;
-
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +9,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+
+import mcp.mobius.betterbarrels.BetterBarrels;
+import mcp.mobius.betterbarrels.common.JabbaCreativeTab;
 
 public class ItemFoldedBarrelMover extends Item {
 

@@ -2,14 +2,13 @@ package mcp.mobius.betterbarrels.network;
 
 import java.util.ArrayList;
 
-import mcp.mobius.betterbarrels.common.blocks.TileEntityBarrel;
-import mcp.mobius.betterbarrels.common.items.upgrades.UpgradeCore;
-
 import net.minecraft.client.Minecraft;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import mcp.mobius.betterbarrels.common.blocks.TileEntityBarrel;
+import mcp.mobius.betterbarrels.common.items.upgrades.UpgradeCore;
 
 public class Message0x05CoreUpdate extends SimpleChannelInboundHandler<Message0x05CoreUpdate>
         implements IBarrelMessage {

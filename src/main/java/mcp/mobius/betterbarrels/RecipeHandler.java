@@ -1,8 +1,5 @@
 package mcp.mobius.betterbarrels;
 
-import mcp.mobius.betterbarrels.common.StructuralLevel;
-import mcp.mobius.betterbarrels.common.items.upgrades.UpgradeCore;
-
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -12,6 +9,8 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import mcp.mobius.betterbarrels.common.StructuralLevel;
+import mcp.mobius.betterbarrels.common.items.upgrades.UpgradeCore;
 
 public class RecipeHandler {
 

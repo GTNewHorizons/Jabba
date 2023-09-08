@@ -1,11 +1,11 @@
 package mcp.mobius.betterbarrels.common.items.upgrades;
 
-import mcp.mobius.betterbarrels.common.JabbaCreativeTab;
-import mcp.mobius.betterbarrels.common.items.IOverlayItem;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
+
+import mcp.mobius.betterbarrels.common.JabbaCreativeTab;
+import mcp.mobius.betterbarrels.common.items.IOverlayItem;
 
 public class ItemUpgrade extends Item implements IOverlayItem {
 

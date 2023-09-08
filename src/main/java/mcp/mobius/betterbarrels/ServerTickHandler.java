@@ -3,10 +3,10 @@ package mcp.mobius.betterbarrels;
 import java.util.Arrays;
 import java.util.WeakHashMap;
 
-import mcp.mobius.betterbarrels.bspace.BSpaceStorageHandler;
-import mcp.mobius.betterbarrels.common.blocks.TileEntityBarrel;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import mcp.mobius.betterbarrels.bspace.BSpaceStorageHandler;
+import mcp.mobius.betterbarrels.common.blocks.TileEntityBarrel;
 
 public enum ServerTickHandler {
 

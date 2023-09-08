@@ -5,15 +5,6 @@ import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 import java.util.Map;
 
-import mcp.mobius.betterbarrels.BetterBarrels;
-import mcp.mobius.betterbarrels.Utils;
-import mcp.mobius.betterbarrels.bspace.BBEventHandler;
-import mcp.mobius.betterbarrels.client.render.BlockBarrelRenderer;
-import mcp.mobius.betterbarrels.client.render.TileEntityBarrelRenderer;
-import mcp.mobius.betterbarrels.common.BaseProxy;
-import mcp.mobius.betterbarrels.common.StructuralLevel;
-import mcp.mobius.betterbarrels.common.blocks.TileEntityBarrel;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
@@ -25,6 +16,14 @@ import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import mcp.mobius.betterbarrels.BetterBarrels;
+import mcp.mobius.betterbarrels.Utils;
+import mcp.mobius.betterbarrels.bspace.BBEventHandler;
+import mcp.mobius.betterbarrels.client.render.BlockBarrelRenderer;
+import mcp.mobius.betterbarrels.client.render.TileEntityBarrelRenderer;
+import mcp.mobius.betterbarrels.common.BaseProxy;
+import mcp.mobius.betterbarrels.common.StructuralLevel;
+import mcp.mobius.betterbarrels.common.blocks.TileEntityBarrel;
 
 public class ClientProxy extends BaseProxy {
 

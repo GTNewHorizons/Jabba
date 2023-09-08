@@ -1,10 +1,10 @@
 package mcp.mobius.betterbarrels.common;
 
-import mcp.mobius.betterbarrels.BetterBarrels;
-
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
+import mcp.mobius.betterbarrels.BetterBarrels;
 
 public class JabbaCreativeTab extends CreativeTabs {
 

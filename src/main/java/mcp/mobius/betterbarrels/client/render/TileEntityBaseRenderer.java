@@ -1,7 +1,5 @@
 package mcp.mobius.betterbarrels.client.render;
 
-import mcp.mobius.betterbarrels.common.blocks.logic.Coordinates;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -19,6 +17,8 @@ import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
+
+import mcp.mobius.betterbarrels.common.blocks.logic.Coordinates;
 
 public abstract class TileEntityBaseRenderer extends TileEntitySpecialRenderer {
 

@@ -1,8 +1,5 @@
 package mcp.mobius.betterbarrels.common.items;
 
-import mcp.mobius.betterbarrels.BetterBarrels;
-import mcp.mobius.betterbarrels.common.JabbaCreativeTab;
-
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,6 +8,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+
+import mcp.mobius.betterbarrels.BetterBarrels;
+import mcp.mobius.betterbarrels.common.JabbaCreativeTab;
 
 public class ItemTuningFork extends Item implements IOverlayItem {
 
