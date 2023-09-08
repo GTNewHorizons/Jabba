@@ -37,8 +37,12 @@ item.hammer.creative.name=Бочкообразный молот (Творчес�
 
 item.dolly.normal.empty.name=Тележка
 item.dolly.normal.full.name=Тележка (Полная)
+item.dolly.normal.folded.name=Тележка (Сложенная)
 item.dolly.diamond.empty.name=Алмазная тележка
 item.dolly.diamond.full.name=Алмазная тележка (Полная)
+item.dolly.folding_hint.1=Присесть и правая кнопка мыши чтобы сложить
+item.dolly.folding_hint.2=Сложенные тележки можно хранить в сундуках и рюкзаках
+item.dolly.folded_hint=Присесть и правая кнопка мыши чтобы разложить
 item.fork.name=Пространственный камертон
 
 tile.blockbarrel.name=Better Barrel

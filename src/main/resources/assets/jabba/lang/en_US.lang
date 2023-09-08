@@ -37,8 +37,12 @@ item.hammer.creative.name=Barrel Hammer(Creative)
 
 item.dolly.normal.empty.name=Dolly
 item.dolly.normal.full.name=Dolly (Full)
-item.dolly.diamond.empty.name=Diamond dolly
-item.dolly.diamond.full.name=Diamond dolly (Full)
+item.dolly.normal.folded.name=Dolly (Folded)
+item.dolly.diamond.empty.name=Diamond Dolly
+item.dolly.diamond.full.name=Diamond Dolly (Full)
+item.dolly.folding_hint.1=Sneak right click to fold
+item.dolly.folding_hint.2=Folded dollies can be stored in chests and backpacks
+item.dolly.folded_hint=Right click to unfold
 item.fork.name=B-Space tuning fork
 
 tile.blockbarrel.name=Better Barrel
