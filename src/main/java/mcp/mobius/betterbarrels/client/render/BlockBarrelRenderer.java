@@ -49,7 +49,7 @@ public class BlockBarrelRenderer implements ISimpleBlockRenderingHandler {
             RenderBlocks renderer) {
         TileEntityBarrel barrel = (TileEntityBarrel) world.getTileEntity(x, y, z);
 
-        if(barrel == null) return false;
+        if (barrel == null) return false;
 
         renderer.uvRotateBottom = forgeFacingtoMCTopBottomRotate[0][barrel.rotation.ordinal()];
         renderer.uvRotateTop = forgeFacingtoMCTopBottomRotate[1][barrel.rotation.ordinal()];
