@@ -187,9 +187,15 @@ public class ItemBarrelMover extends Item {
         return false;
     }
 
+
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
         if (world.isRemote) {
+            return itemStack;
+        }
+
+        // Config to enable or disable Dollie
+        if (BetterBarrels.DisableStacking) {
             return itemStack;
         }
 
@@ -198,6 +204,7 @@ public class ItemBarrelMover extends Item {
             itemStack.getTagCompound().removeTag(PREVENT_FOLD_TAG_KEY);
             return itemStack;
         }
+
 
         if (player.isSneaking() && type == DollyType.NORMAL
                 && (!itemStack.hasTagCompound() || !itemStack.getTagCompound().hasKey("Container"))) {
@@ -216,6 +223,8 @@ public class ItemBarrelMover extends Item {
 
         return itemStack;
     }
+
+
 
     protected boolean placeContainer(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side) {
         NBTTagCompound nbtStack = stack.getTagCompound();
