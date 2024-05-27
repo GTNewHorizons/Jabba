@@ -69,7 +69,7 @@ public class BetterBarrels {
 
     /* CONFIG PARAMS */
     private static Configuration config = null;
-    public static boolean DisableStacking;
+    public static boolean disableDollyStacking;
     public static boolean fullBarrelTexture = true;
     public static boolean highRezTexture = true;
     public static boolean showUpgradeSymbols = true;
@@ -216,7 +216,11 @@ public class BetterBarrels {
                     BlacklistedTileEntiyClassNames,
                     "The Canonical Class-Names of TileEntities that should be ignored when using a Dolly.");
 
-            DisableStacking = config.getBoolean("DisableStacking", Configuration.CATEGORY_GENERAL, false, "Disables the ability to collapse and stack the dollies");
+            disableDollyStacking = config.getBoolean(
+                    "disableDollyStacking",
+                    Configuration.CATEGORY_GENERAL,
+                    false,
+                    "Disables the ability to collapse and stack the dollies");
 
             // fullBarrelTexture = config.get(Configuration.CATEGORY_GENERAL, "fullBarrelTexture",
             // true).getBoolean(true);
