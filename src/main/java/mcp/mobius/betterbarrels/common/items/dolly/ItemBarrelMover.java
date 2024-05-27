@@ -193,6 +193,11 @@ public class ItemBarrelMover extends Item {
             return itemStack;
         }
 
+        // Config to enable or disable Dollie
+        if (BetterBarrels.disableDollyStacking) {
+            return itemStack;
+        }
+
         // This prevents the dolly from folding after sneak right-clicking to place an item.
         if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey(PREVENT_FOLD_TAG_KEY)) {
             itemStack.getTagCompound().removeTag(PREVENT_FOLD_TAG_KEY);
