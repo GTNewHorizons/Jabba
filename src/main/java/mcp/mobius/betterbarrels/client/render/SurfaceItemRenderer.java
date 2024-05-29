@@ -5,7 +5,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -142,7 +141,7 @@ public class SurfaceItemRenderer extends RenderItem {
 
     private void renderItemIntoGUIBlock(FontRenderer fontRenderer, TextureManager texManager, ItemStack itemStack,
             int x, int y, boolean renderEffect) {
-        RenderHelper.enableGUIStandardItemLighting();
+        SurfaceItemRenderHelper.enableStandardItemLighting();
         GL11.glDisable(GL11.GL_LIGHTING);
 
         texManager.bindTexture(TextureMap.locationBlocksTexture);
@@ -186,6 +185,6 @@ public class SurfaceItemRenderer extends RenderItem {
 
         GL11.glPopMatrix();
 
-        RenderHelper.disableStandardItemLighting();
+        SurfaceItemRenderHelper.disableStandardItemLighting();
     }
 }
