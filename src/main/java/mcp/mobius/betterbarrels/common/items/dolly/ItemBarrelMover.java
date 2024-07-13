@@ -5,7 +5,9 @@ import java.io.DataOutputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -49,6 +51,9 @@ public class ItemBarrelMover extends Item {
     protected static ArrayList<Class> classExtensions = new ArrayList<Class>();
     protected static ArrayList<String> classExtensionsNames = new ArrayList<String>();
     protected static HashMap<String, Class> classMap = new HashMap<String, Class>();
+
+    protected static ArrayList<String> spawnerClassExtensionsNames = new ArrayList<String>();
+    protected static Set<Class<?>> spawnerClasses = new HashSet<>();
 
     protected Method tagCompoundWrite = Utils.ReflectionHelper.getMethod(
             NBTTagCompound.class,
@@ -120,6 +125,15 @@ public class ItemBarrelMover extends Item {
             } catch (ClassNotFoundException e) {
                 classExtensions.add(null);
             }
+        }
+
+        spawnerClassExtensionsNames.add("chylex.hee.tileentity.TileEntityCustomSpawner");
+        spawnerClasses.add(TileEntityMobSpawner.class);
+
+        for (String s : spawnerClassExtensionsNames) {
+            try {
+                spawnerClasses.add(Class.forName(s));
+            } catch (ClassNotFoundException ignored) {}
         }
     }
 
@@ -523,7 +537,7 @@ public class ItemBarrelMover extends Item {
     }
 
     private boolean isTEMovable(TileEntity te) {
-        if (te instanceof TileEntityMobSpawner) return this.canPickSpawners();
+        if (tileIsASpawner(te)) return this.canPickSpawners();
         if (te instanceof TileEntityBarrel) return true;
         if (te instanceof TileEntityChest) return true;
         if (isTileBlacklisted(te.getClass())) {
@@ -532,6 +546,16 @@ public class ItemBarrelMover extends Item {
         for (Class c : classExtensions) {
             if (c != null && c.isInstance(te)) return true;
         }
+        return false;
+    }
+
+    private static boolean tileIsASpawner(TileEntity te) {
+        for (Class<?> c : spawnerClasses) {
+            if (c != null && c.isInstance(te)) {
+                return true;
+            }
+        }
+
         return false;
     }
 
@@ -621,7 +645,7 @@ public class ItemBarrelMover extends Item {
         nbtTarget.setString("Block", GameData.getBlockRegistry().getNameForObject(storedBlock));
         nbtTarget.setInteger("Meta", blockMeta);
         nbtTarget.setString("TEClass", containerTE.getClass().getName());
-        nbtTarget.setBoolean("isSpawner", containerTE instanceof TileEntityMobSpawner);
+        nbtTarget.setBoolean("isSpawner", tileIsASpawner(containerTE));
         nbtTarget.setTag("NBT", nbtContainer); // TODO: Check this, seems the nbt classes were streamlined somewhat
 
         if (tagCompoundWrite != null) {
