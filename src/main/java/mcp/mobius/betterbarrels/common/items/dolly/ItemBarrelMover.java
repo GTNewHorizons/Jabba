@@ -5,7 +5,9 @@ import java.io.DataOutputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -49,6 +51,9 @@ public class ItemBarrelMover extends Item {
     protected static ArrayList<Class> classExtensions = new ArrayList<Class>();
     protected static ArrayList<String> classExtensionsNames = new ArrayList<String>();
     protected static HashMap<String, Class> classMap = new HashMap<String, Class>();
+
+    protected static ArrayList<String> spawnerClassExtensionsNames = new ArrayList<String>();
+    protected static Set<Class<?>> spawnerClasses = new HashSet<>();
 
     protected Method tagCompoundWrite = Utils.ReflectionHelper.getMethod(
             NBTTagCompound.class,
@@ -120,6 +125,15 @@ public class ItemBarrelMover extends Item {
             } catch (ClassNotFoundException e) {
                 classExtensions.add(null);
             }
+        }
+
+        spawnerClassExtensionsNames.add("chylex.hee.tileentity.TileEntityCustomSpawner");
+        spawnerClasses.add(TileEntityMobSpawner.class);
+
+        for (String s : spawnerClassExtensionsNames) {
+            try {
+                spawnerClasses.add(Class.forName(s));
+            } catch (ClassNotFoundException ignored) {}
         }
     }
 
@@ -536,16 +550,11 @@ public class ItemBarrelMover extends Item {
     }
 
     private static boolean tileIsASpawner(TileEntity te) {
-        if (te instanceof TileEntityMobSpawner) {
-            return true;
-        }
-
-        try {
-            Class<?> heeClass = Class.forName("chylex.hee.tileentity.TileEntityCustomSpawner");
-            if (heeClass.isInstance(te)) {
+        for (Class<?> c : spawnerClasses) {
+            if (c != null && c.isInstance(te)) {
                 return true;
             }
-        } catch (ClassNotFoundException ignored) {}
+        }
 
         return false;
     }
