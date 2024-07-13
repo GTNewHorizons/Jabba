@@ -523,7 +523,7 @@ public class ItemBarrelMover extends Item {
     }
 
     private boolean isTEMovable(TileEntity te) {
-        if (te instanceof TileEntityMobSpawner) return this.canPickSpawners();
+        if (tileIsASpawner(te)) return this.canPickSpawners();
         if (te instanceof TileEntityBarrel) return true;
         if (te instanceof TileEntityChest) return true;
         if (isTileBlacklisted(te.getClass())) {
@@ -532,6 +532,21 @@ public class ItemBarrelMover extends Item {
         for (Class c : classExtensions) {
             if (c != null && c.isInstance(te)) return true;
         }
+        return false;
+    }
+
+    private static boolean tileIsASpawner(TileEntity te) {
+        if (te instanceof TileEntityMobSpawner) {
+            return true;
+        }
+
+        try {
+            Class<?> heeClass = Class.forName("chylex.hee.tileentity.TileEntityCustomSpawner");
+            if (heeClass.isInstance(te)) {
+                return true;
+            }
+        } catch (ClassNotFoundException ignored) {}
+
         return false;
     }
 
@@ -621,7 +636,7 @@ public class ItemBarrelMover extends Item {
         nbtTarget.setString("Block", GameData.getBlockRegistry().getNameForObject(storedBlock));
         nbtTarget.setInteger("Meta", blockMeta);
         nbtTarget.setString("TEClass", containerTE.getClass().getName());
-        nbtTarget.setBoolean("isSpawner", containerTE instanceof TileEntityMobSpawner);
+        nbtTarget.setBoolean("isSpawner", tileIsASpawner(containerTE));
         nbtTarget.setTag("NBT", nbtContainer); // TODO: Check this, seems the nbt classes were streamlined somewhat
 
         if (tagCompoundWrite != null) {
