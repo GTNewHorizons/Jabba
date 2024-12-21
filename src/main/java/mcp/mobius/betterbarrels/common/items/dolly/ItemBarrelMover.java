@@ -712,7 +712,7 @@ public class ItemBarrelMover extends Item {
     public void addInformation(ItemStack itemStack, EntityPlayer player, List tooltip, boolean p_77624_4_) {
         super.addInformation(itemStack, player, tooltip, p_77624_4_);
 
-        if (type == DollyType.NORMAL
+        if (type == DollyType.NORMAL && !BetterBarrels.disableDollyStacking
                 && (!itemStack.hasTagCompound() || !itemStack.getTagCompound().hasKey("Container"))) {
             tooltip.add(StatCollector.translateToLocal("item.dolly.folding_hint.1"));
             tooltip.add(StatCollector.translateToLocal("item.dolly.folding_hint.2"));
