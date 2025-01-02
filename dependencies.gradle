@@ -3,7 +3,7 @@
 dependencies {
     compile('com.github.GTNewHorizons:waila:1.8.2:dev')
 
-    compileOnly('com.github.GTNewHorizons:ForestryMC:4.10.0:dev')
+    compileOnly('com.github.GTNewHorizons:ForestryMC:4.10.1:dev')
     compileOnly('curse.maven:minefactory-reloaded-66672:2366150')
-    api('com.github.GTNewHorizons:BuildCraft:7.1.39:dev')
+    api('com.github.GTNewHorizons:BuildCraft:7.1.41:dev')
 }
