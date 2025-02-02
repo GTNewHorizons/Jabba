@@ -107,6 +107,7 @@ public class ItemBarrelMover extends Item {
         classExtensionsNames.add("jds.bibliocraft.tileentities.TileEntityWeaponRack");
         classExtensionsNames.add("jds.bibliocraft.tileentities.TileEntityGenericShelf");
         classExtensionsNames.add("jds.bibliocraft.tileentities.TileEntityArmorStand");
+        classExtensionsNames.add("jds.bibliocraft.tileentities.TileEntityLabel");
         // classExtensionsNames.add("jds.bibliocraft.tileentities.TileEntityWeaponCase");
 
         classExtensionsNames.add("com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers");
@@ -352,6 +353,9 @@ public class ItemBarrelMover extends Item {
             nbtContainer.setInteger(
                     "genericShelfAngle",
                     this.fromForgeToBiblio(this.getBarrelOrientationOnPlacement(player)));
+
+        if (TEClassName.contains("jds.bibliocraft.tileentities") && nbtContainer.hasKey("labelAngle"))
+            nbtContainer.setInteger("labelAngle", this.fromForgeToBiblio(this.getBarrelOrientationOnPlacement(player)));
 
         if (TEClassName.contains("jds.bibliocraft.tileentities.TileEntityArmorStand"))
             blockMeta = this.fromForgeToBiblio(this.getBarrelOrientationOnPlacement(player));
