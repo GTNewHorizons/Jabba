@@ -107,6 +107,7 @@ public class ItemBarrelMover extends Item {
         classExtensionsNames.add("jds.bibliocraft.tileentities.TileEntityWeaponRack");
         classExtensionsNames.add("jds.bibliocraft.tileentities.TileEntityGenericShelf");
         classExtensionsNames.add("jds.bibliocraft.tileentities.TileEntityArmorStand");
+        classExtensionsNames.add("jds.bibliocraft.tileentities.TileEntityLabel");
         // classExtensionsNames.add("jds.bibliocraft.tileentities.TileEntityWeaponCase");
 
         classExtensionsNames.add("com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers");
@@ -337,21 +338,13 @@ public class ItemBarrelMover extends Item {
             nbtContainer.setByte("orientation", (byte) this.getBarrelOrientationOnPlacement(player).ordinal());
 
         /* Bibliocraft orientation correction block */
-        if (TEClassName.contains("jds.bibliocraft.tileentities") && nbtContainer.hasKey("bookcaseAngle")) nbtContainer
-                .setInteger("bookcaseAngle", this.fromForgeToBiblio(this.getBarrelOrientationOnPlacement(player)));
-
-        if (TEClassName.contains("jds.bibliocraft.tileentities") && nbtContainer.hasKey("potionshelfAngle"))
-            nbtContainer.setInteger(
-                    "potionshelfAngle",
-                    this.fromForgeToBiblio(this.getBarrelOrientationOnPlacement(player)));
-
-        if (TEClassName.contains("jds.bibliocraft.tileentities") && nbtContainer.hasKey("rackAngle"))
-            nbtContainer.setInteger("rackAngle", this.fromForgeToBiblio(this.getBarrelOrientationOnPlacement(player)));
-
-        if (TEClassName.contains("jds.bibliocraft.tileentities") && nbtContainer.hasKey("genericShelfAngle"))
-            nbtContainer.setInteger(
-                    "genericShelfAngle",
-                    this.fromForgeToBiblio(this.getBarrelOrientationOnPlacement(player)));
+        if (TEClassName.contains("jds.bibliocraft.tileentities")) {
+            orientBibliocraftTileToPlayer(nbtContainer, "bookcaseAngle", player);
+            orientBibliocraftTileToPlayer(nbtContainer, "potionshelfAngle", player);
+            orientBibliocraftTileToPlayer(nbtContainer, "rackAngle", player);
+            orientBibliocraftTileToPlayer(nbtContainer, "genericShelfAngle", player);
+            orientBibliocraftTileToPlayer(nbtContainer, "labelAngle", player);
+        }
 
         if (TEClassName.contains("jds.bibliocraft.tileentities.TileEntityArmorStand"))
             blockMeta = this.fromForgeToBiblio(this.getBarrelOrientationOnPlacement(player));
@@ -516,6 +509,11 @@ public class ItemBarrelMover extends Item {
         world.markBlockForUpdate(targX, targY, targZ);
 
         return true;
+    }
+
+    private void orientBibliocraftTileToPlayer(NBTTagCompound nbtContainer, String angleKey, EntityPlayer player) {
+        if (nbtContainer.hasKey(angleKey))
+            nbtContainer.setInteger(angleKey, this.fromForgeToBiblio(this.getBarrelOrientationOnPlacement(player)));
     }
 
     private void fixIC2Orientation(TileEntity entity, EntityPlayer player, int targY) {
