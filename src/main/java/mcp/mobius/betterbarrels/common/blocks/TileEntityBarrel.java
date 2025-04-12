@@ -217,14 +217,18 @@ public class TileEntityBarrel extends TileEntity implements ISidedInventory, IDe
     public void leftClick(EntityPlayer player) {
         if (this.worldObj.isRemote) return;
 
-        ItemStack droppedStack = null;
+        ItemStack extractedStack = null;
         if ((BetterBarrels.reverseBehaviourClickLeft && !player.isSneaking())
                 || (!BetterBarrels.reverseBehaviourClickLeft && player.isSneaking()))
-            droppedStack = this.getStorage().getStack(1);
-        else droppedStack = this.getStorage().getStack();
+            extractedStack = this.getStorage().getStack(1);
+        else extractedStack = this.getStorage().getStack();
 
-        if ((droppedStack != null) && (droppedStack.stackSize > 0))
-            Utils.dropItemInWorld(this, player, droppedStack, 0.02);
+        if ((extractedStack != null) && (extractedStack.stackSize > 0)) {
+            // try to add to player inventory first, otherwise drop
+            if (!player.inventory.addItemStackToInventory(extractedStack)) {
+                Utils.dropItemInWorld(this, player, extractedStack, 0.02);
+            }
+        }
 
         this.markDirty();
     }
