@@ -1,9 +1,9 @@
 // Add your dependencies here
 
 dependencies {
-    compile('com.github.GTNewHorizons:waila:1.8.2:dev')
+    compile('com.github.GTNewHorizons:waila:1.8.4:dev')
 
-    compileOnly('com.github.GTNewHorizons:ForestryMC:4.10.1:dev')
+    compileOnly('com.github.GTNewHorizons:ForestryMC:4.10.5:dev')
     compileOnly('curse.maven:minefactory-reloaded-66672:2366150')
     api('com.github.GTNewHorizons:BuildCraft:7.1.42:dev')
 }
