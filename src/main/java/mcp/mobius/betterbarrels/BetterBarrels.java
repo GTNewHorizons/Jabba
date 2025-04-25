@@ -57,17 +57,14 @@ public class BetterBarrels {
 
     public static Logger log = LogManager.getLogger(modid);
 
-    // The instance of your mod that Forge uses.
     @Instance(modid)
     public static BetterBarrels instance;
 
-    // Says where the client and server 'proxy' code is loaded.
     @SidedProxy(
             clientSide = "mcp.mobius.betterbarrels.client.ClientProxy",
             serverSide = "mcp.mobius.betterbarrels.common.BaseProxy")
     public static BaseProxy proxy;
 
-    /* CONFIG PARAMS */
     private static Configuration config = null;
     public static boolean disableDollyStacking;
     public static boolean fullBarrelTexture = true;
@@ -108,6 +105,8 @@ public class BetterBarrels {
             "ic2.core.block.machine.tileentity.TileEntityNuke" };
     public static HashSet<Class<? extends TileEntity>> BlacklistedTileEntityClasses = new HashSet<Class<? extends TileEntity>>();
 
+    public static String[] extraDollyMovableTileEntityClassNames = new String[0];
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         config = new Configuration(event.getSuggestedConfigurationFile());
@@ -131,7 +130,7 @@ public class BetterBarrels {
                             StructuralLevel.defaultUpgradeMaterialsList,
                             "A structural tier will be created for each material in this list, even if not craftable")
                     .getStringList();
-            if (materialsList.length > 18) { // limit max upgrade size to 18 due to internal int storage type on barrel
+            if (materialsList.length > 18) {
                 String[] trimedList = new String[18];
                 for (int i = 0; i < 18; i++) trimedList[i] = materialsList[i];
                 materialsList = trimedList;
@@ -209,12 +208,18 @@ public class BetterBarrels {
                     "Render Distance (square) for stack and text on barrel.");
             renderStackAndText = config.getBoolean("renderStackAndText", Configuration.CATEGORY_GENERAL, true, "");
 
-            // Blacklisted TileEntities for the Dolly
             BlacklistedTileEntiyClassNames = config.getStringList(
                     "BlacklistedTileEntiyClassNames",
                     Configuration.CATEGORY_GENERAL,
                     BlacklistedTileEntiyClassNames,
                     "The Canonical Class-Names of TileEntities that should be ignored when using a Dolly.");
+
+            extraDollyMovableTileEntityClassNames = config.getStringList(
+                    "ExtraDollyMovableTileEntities",
+                    Configuration.CATEGORY_GENERAL,
+                    extraDollyMovableTileEntityClassNames,
+                    "A list of additional canonical TileEntity class names that the Dolly should be able to move (use with caution)."
+            );
 
             disableDollyStacking = config.getBoolean(
                     "disableDollyStacking",
@@ -222,11 +227,6 @@ public class BetterBarrels {
                     false,
                     "Disables the ability to collapse and stack the dollies");
 
-            // fullBarrelTexture = config.get(Configuration.CATEGORY_GENERAL, "fullBarrelTexture",
-            // true).getBoolean(true);
-            // highRezTexture = config.get(Configuration.CATEGORY_GENERAL, "highRezTexture", false).getBoolean(false);
-            // showUpgradeSymbols = config.get(Configuration.CATEGORY_GENERAL, "showUpgradeSymbols",
-            // false).getBoolean(false);
         } catch (Exception e) {
             FMLLog.log(org.apache.logging.log4j.Level.ERROR, e, "BlockBarrel has a problem loading it's configuration");
             FMLLog.severe(e.getMessage());
@@ -234,7 +234,6 @@ public class BetterBarrels {
             if (config.hasChanged()) config.save();
         }
 
-        // Process Dolly Blacklist
         for (String className : BlacklistedTileEntiyClassNames) {
             Class aClass;
             try {
@@ -259,7 +258,6 @@ public class BetterBarrels {
 
         proxy.registerEventHandler();
 
-        // log.setLevel(Level.FINEST);
         blockBarrel = new BlockBarrel();
         itemUpgradeStructural = new ItemUpgradeStructural();
         itemUpgradeCore = new ItemUpgradeCore();
@@ -271,10 +269,6 @@ public class BetterBarrels {
         itemFoldedMover = new ItemFoldedBarrelMover();
 
         GameRegistry.registerBlock(blockBarrel, "barrel");
-        // GameRegistry.registerBlock(blockMiniBarrel);
-        // GameRegistry.registerBlock(blockBarrelShelf);
-        // GameRegistry.registerTileEntity(TileEntityMiniBarrel.class, "TileEntityMiniBarrel");
-        // GameRegistry.registerTileEntity(TileEntityBarrelShelf.class, "TileEntityBarrelShelf");
 
         GameRegistry.registerItem(itemUpgradeStructural, "upgradeStructural");
         GameRegistry.registerItem(itemUpgradeCore, "upgradeCore");
@@ -305,6 +299,9 @@ public class BetterBarrels {
         if (!Loader.isModLoaded("dreamcraft")) {
             RecipeHandler.instance().registerLateRecipes();
         }
+
+        ItemBarrelMover.initializeExtraMovableClasses();
+
         proxy.postInit();
     }
 
