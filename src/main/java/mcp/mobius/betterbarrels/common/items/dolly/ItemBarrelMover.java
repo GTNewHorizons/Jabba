@@ -29,6 +29,8 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import org.apache.logging.log4j.Level;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.GameData;
 import forestry.factory.recipes.MemorizedRecipe;
@@ -55,6 +57,8 @@ public class ItemBarrelMover extends Item {
     protected static ArrayList<String> spawnerClassExtensionsNames = new ArrayList<String>();
     protected static Set<Class<?>> spawnerClasses = new HashSet<>();
 
+    protected static HashSet<Class<? extends TileEntity>> extraMovableTileEntityClasses = new HashSet<>();
+
     protected Method tagCompoundWrite = Utils.ReflectionHelper.getMethod(
             NBTTagCompound.class,
             new String[] { "a", "func_74734_a", "write" },
@@ -73,8 +77,6 @@ public class ItemBarrelMover extends Item {
         classExtensionsNames.add("buildcraft.energy.TileEngine");
         classExtensionsNames.add("buildcraft.factory.TileTank");
 
-        // classExtensionsNames.add("ic2.api.energy.tile.IEnergySink");
-        // classExtensionsNames.add("ic2.api.energy.tile.IEnergySource");
         classExtensionsNames.add("ic2.api.tile.IWrenchable");
 
         classExtensionsNames.add("mods.railcraft.common.blocks.machine.beta.TileEngine");
@@ -89,8 +91,6 @@ public class ItemBarrelMover extends Item {
 
         classExtensionsNames.add("thermalexpansion.block.engine.TileEngineRoot");
         classExtensionsNames.add("thermalexpansion.block.machine.TileMachineRoot");
-
-        // classExtensionsNames.add("factorization.common.TileEntityBarrel");
 
         classExtensionsNames.add("dmillerw.cchests.block.tile.TileChest");
 
@@ -108,7 +108,6 @@ public class ItemBarrelMover extends Item {
         classExtensionsNames.add("jds.bibliocraft.tileentities.TileEntityGenericShelf");
         classExtensionsNames.add("jds.bibliocraft.tileentities.TileEntityArmorStand");
         classExtensionsNames.add("jds.bibliocraft.tileentities.TileEntityLabel");
-        // classExtensionsNames.add("jds.bibliocraft.tileentities.TileEntityWeaponCase");
 
         classExtensionsNames.add("com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers");
         classExtensionsNames.add("com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityCompDrawers");
@@ -140,11 +139,33 @@ public class ItemBarrelMover extends Item {
         }
     }
 
+    public static void initializeExtraMovableClasses() {
+        extraMovableTileEntityClasses.clear();
+        for (String className : BetterBarrels.extraDollyMovableTileEntityClassNames) {
+            if (className == null || className.trim().isEmpty()) {
+                continue;
+            }
+            try {
+                Class<?> aClass = Class.forName(className.trim());
+                if (TileEntity.class.isAssignableFrom(aClass)) {
+                    @SuppressWarnings("unchecked")
+                    Class<? extends TileEntity> teClass = (Class<? extends TileEntity>) aClass;
+                    extraMovableTileEntityClasses.add(teClass);
+                    BetterBarrels.log.log(Level.INFO, "Adding " + className + " to Dolly movable list via config.");
+                } else {
+                    BetterBarrels.log.log(Level.WARN, "Class " + className + " from Dolly config is not a TileEntity subclass. Ignoring.");
+                }
+            } catch (ClassNotFoundException e) {
+                BetterBarrels.log.log(Level.WARN, "Could not find class " + className + " specified in Dolly config. Ignoring.");
+            } catch (Throwable t) {
+                 BetterBarrels.log.log(Level.ERROR, "Error processing class " + className + " for Dolly config.", t);
+            }
+        }
+    }
+
     public ItemBarrelMover() {
         super();
         this.setMaxStackSize(1);
-        // this.setHasSubtypes(true);
-        // this.setMaxDamage(0);
         this.setCreativeTab(JabbaCreativeTab.tab);
         this.setNoRepair();
     }
@@ -210,12 +231,10 @@ public class ItemBarrelMover extends Item {
             return itemStack;
         }
 
-        // Config to enable or disable Dollie
         if (BetterBarrels.disableDollyStacking) {
             return itemStack;
         }
 
-        // This prevents the dolly from folding after sneak right-clicking to place an item.
         if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey(PREVENT_FOLD_TAG_KEY)) {
             itemStack.getTagCompound().removeTag(PREVENT_FOLD_TAG_KEY);
             return itemStack;
@@ -223,7 +242,6 @@ public class ItemBarrelMover extends Item {
 
         if (player.isSneaking() && type == DollyType.NORMAL
                 && (!itemStack.hasTagCompound() || !itemStack.getTagCompound().hasKey("Container"))) {
-            // Diamond dollies can't be folded because they can be damaged.
             final EntityItem newItem = new EntityItem(
                     world,
                     player.posX,
@@ -254,7 +272,6 @@ public class ItemBarrelMover extends Item {
         NBTTagCompound nbtContainer = nbtStack.getCompoundTag("Container").getCompoundTag("NBT");
 
         ForgeDirection targSide = ForgeDirection.getOrientation(side);
-        // if (world.isBlockSolidOnSide(x, y, z, targSide)) {return false;}
 
         int targX = x;
         int targY = y;
@@ -265,8 +282,6 @@ public class ItemBarrelMover extends Item {
         if (targetBlock == Blocks.snow) targSide = ForgeDirection.UP;
 
         if (targetBlock != Blocks.vine && targetBlock != Blocks.tallgrass && targetBlock != Blocks.deadbush
-        // && (Block.blocksList[targetBlock] == null || !Block.blocksList[targetBlock].isBlockReplaceable(world, targX,
-        // targY, targZ))) {
                 && (targetBlock == null || !targetBlock.isReplaceable(world, targX, targY, targZ))) {
             if (targSide.equals(ForgeDirection.NORTH)) targZ -= 1;
             if (targSide.equals(ForgeDirection.SOUTH)) targZ += 1;
@@ -284,63 +299,48 @@ public class ItemBarrelMover extends Item {
         nbtContainer.setInteger("y", targY);
         nbtContainer.setInteger("z", targZ);
 
-        /* Vanilla chest */
         if (TEClassName.contains("net.minecraft.tileentity.TileEntityChest"))
             blockMeta = this.getBarrelOrientationOnPlacement(player).ordinal();
 
-        /* AE2 sky stone chest orientation correction */
         else if (TEClassName.contains("appeng.tile.storage.TileSkyChest") && nbtContainer.hasKey("orientation_forward"))
             nbtContainer.setString("orientation_forward", this.getBarrelOrientationOnPlacement(player).toString());
 
-        /* Buildcraft engines orientation correction */
         else if (TEClassName.contains("buildcraft.energy.TileEngine") && nbtContainer.hasKey("orientation"))
             nbtContainer.setInteger("orientation", 1);
 
-        /* Railcraft engines orientation correction */
         else if (TEClassName.contains("mods.railcraft.common.blocks.machine.beta") && nbtContainer.hasKey("direction"))
             nbtContainer.setByte("direction", (byte) 1);
 
-        /* Forestry engines orientation correction */
         else if (TEClassName.contains("forestry.energy.gadgets") && nbtContainer.hasKey("Orientation"))
             nbtContainer.setInteger("Orientation", 1);
 
-        /* Forestry chests and worktable orientation correction */
         else if ((TEClassName.contains("forestry.apiculture.tiles.TileApiaristChest")
                 || TEClassName.contains("forestry.arboriculture.tiles.TileArboristChest")
                 || TEClassName.contains("forestry.lepidopterology.tiles.TileLepidopteristChest")
                 || TEClassName.contains("forestry.factory.tiles.TileWorktable")) && nbtContainer.hasKey("Orientation"))
             nbtContainer.setInteger("Orientation", this.getBarrelOrientationOnPlacement(player).ordinal());
 
-        /* Dartcraft engines orientation correction */
         else if (TEClassName.contains("bluedart.tile.TileEntityForceEngine") && nbtContainer.hasKey("facing"))
             nbtContainer.setByte("facing", (byte) 1);
 
-        /* Thermal Expansion engines */
         else if (TEClassName.contains("thermalexpansion.block.engine") && nbtContainer.hasKey("side.facing"))
             nbtContainer.setByte("side.facing", (byte) 1);
 
-        /* Iron chest orientation correction */
         else if (TEClassName.contains("cpw.mods.ironchest") && nbtContainer.hasKey("facing"))
             nbtContainer.setByte("facing", (byte) this.getBarrelOrientationOnPlacement(player).ordinal());
 
-        /* IC2 Orientation correction part1 */
         else if (TEClassName.contains("ic2.core.block") && nbtContainer.hasKey("facing"))
             nbtContainer.setShort("facing", (short) 6);
 
-        /* Gregtech Orientation Correction */
         else if (TEClassName.contains("gregtechmod") && nbtContainer.hasKey("mFacing"))
             nbtContainer.setShort("mFacing", (short) this.getBarrelOrientationOnPlacement(player).ordinal());
 
-        /* Dmillerw Orientation Correction */
         else if (TEClassName.contains("dmillerw.cchests.block.tile") && nbtContainer.hasKey("orientation"))
             nbtContainer.setByte("orientation", (byte) this.getBarrelOrientationOnPlacement(player).ordinal());
 
-        /* BetterStorage Orientation Correction */
-        else if (TEClassName.contains("net.mcft.copy.betterstorage.block.tileentity")
-                && nbtContainer.hasKey("orientation"))
+        else if (TEClassName.contains("net.mcft.copy.betterstorage.block.tileentity") && nbtContainer.hasKey("orientation"))
             nbtContainer.setByte("orientation", (byte) this.getBarrelOrientationOnPlacement(player).ordinal());
 
-        /* Bibliocraft orientation correction block */
         else if (TEClassName.contains("jds.bibliocraft.tileentities")) {
             orientBibliocraftTileToPlayer(nbtContainer, "bookcaseAngle", player);
             orientBibliocraftTileToPlayer(nbtContainer, "potionshelfAngle", player);
@@ -352,24 +352,13 @@ public class ItemBarrelMover extends Item {
         else if (TEClassName.contains("jds.bibliocraft.tileentities.TileEntityArmorStand"))
             blockMeta = this.fromForgeToBiblio(this.getBarrelOrientationOnPlacement(player));
 
-        /* Extra Utilities chest orientation correction */
         else if (TEClassName.contains("com.rwtema.extrautils.tileentity.chests.TileFullChest"))
             blockMeta = (this.fromForgeToBiblio(this.getBarrelOrientationOnPlacement(player)) == 3 ? 0
                     : this.fromForgeToBiblio(this.getBarrelOrientationOnPlacement(player)) + 1);
 
-        /* Chisel Present Chest orientation correction */
-        else if (TEClassName.contains("team.chisel.block.tileentity.TileEntityPresent")
-                && nbtContainer.hasKey("rotation"))
+        else if (TEClassName.contains("team.chisel.block.tileentity.TileEntityPresent") && nbtContainer.hasKey("rotation"))
             nbtContainer.setInteger("rotation", (byte) this.getBarrelOrientationOnPlacement(player).ordinal());
 
-        // if (TEClassName.contains("jds.bibliocraft.tileentities") && nbtContainer.hasKey("caseAngle"))
-        // nbtContainer.setInteger("caseAngle", this.fromForgeToBiblio(this.getBarrelOrientationOnPlacement(player)));
-
-        /* Factorization barrel */
-        // if (TEClassName.contains("factorization.common.TileEntityBarrel") && nbtContainer.hasKey("facing"))
-        // nbtContainer.setByte("facing", (byte)this.getBarrelOrientationOnPlacement(player).ordinal());
-
-        /* Storage Drawers Orientation Correction */
         else if (TEClassName.contains("com.jaquadro.minecraft.storagedrawers.block.tile") && nbtContainer.hasKey("Dir"))
             nbtContainer.setInteger("Dir", (short) this.getBarrelOrientationOnPlacement(player).ordinal());
 
@@ -395,7 +384,6 @@ public class ItemBarrelMover extends Item {
             }
         }
 
-        /* Thermal Expension */
         else if (TEClassName.contains("thermalexpansion.block.machine") && nbtContainer.hasKey("side.facing")) {
             ForgeDirection side_facing = ForgeDirection.getOrientation(nbtContainer.getByte("side.facing"));
             ForgeDirection new_facing = this.getBarrelOrientationOnPlacement(player);
@@ -422,80 +410,68 @@ public class ItemBarrelMover extends Item {
             blockMeta = this.getBarrelOrientationOnPlacement(player).ordinal();
         }
 
-        /* Better barrel craziness */
+        else if (nbtContainer.getString("id").equals("TileEntityBarrel")) {
+            ForgeDirection newBarrelRotation = Utils.getDirectionFacingEntity(player, false);
+            ForgeDirection oldBarrelRotation = ForgeDirection.getOrientation(nbtContainer.getInteger("rotation"));
+            ForgeDirection newBarrelOrientation = Utils
+                    .getDirectionFacingEntity(player, BetterBarrels.allowVerticalPlacement);
+            ForgeDirection oldBarrelOrientation = ForgeDirection.getOrientation(nbtContainer.getInteger("orientation"));
+            int[] newSideArray = new int[6];
+            int[] oldSideArray = nbtContainer.getIntArray("sideUpgrades");
+            int[] newSideMetaArray = new int[6];
+            int[] oldSideMetaArray = nbtContainer.getIntArray("sideMeta");
 
-        else if (!TEClassName.contains("ganymedes01.etfuturum.tileentities.TileEntityBarrel")
-                && nbtContainer.getString("id").equals("TileEntityBarrel")) {
-                    ForgeDirection newBarrelRotation = Utils.getDirectionFacingEntity(player, false);
-                    ForgeDirection oldBarrelRotation = ForgeDirection
-                            .getOrientation(nbtContainer.getInteger("rotation"));
-                    ForgeDirection newBarrelOrientation = Utils
-                            .getDirectionFacingEntity(player, BetterBarrels.allowVerticalPlacement);
-                    ForgeDirection oldBarrelOrientation = ForgeDirection
-                            .getOrientation(nbtContainer.getInteger("orientation"));
-                    int[] newSideArray = new int[6];
-                    int[] oldSideArray = nbtContainer.getIntArray("sideUpgrades");
-                    int[] newSideMetaArray = new int[6];
-                    int[] oldSideMetaArray = nbtContainer.getIntArray("sideMeta");
+            if (oldBarrelRotation == ForgeDirection.UNKNOWN) oldBarrelRotation = ForgeDirection.SOUTH;
+            if (oldBarrelOrientation == ForgeDirection.UNKNOWN) oldBarrelOrientation = ForgeDirection.SOUTH;
 
-                    /*
-                     * Note: the barrel should never have these values set as unknown, but this will prevent the code
-                     * from crashing or infinite looping
-                     */
-                    if (oldBarrelRotation == ForgeDirection.UNKNOWN) oldBarrelRotation = ForgeDirection.SOUTH;
-                    if (oldBarrelOrientation == ForgeDirection.UNKNOWN) oldBarrelOrientation = ForgeDirection.SOUTH;
-
-                    /* Normalize the barrel so it is upright and front facing player */
-                    if (oldBarrelOrientation == ForgeDirection.UP || oldBarrelOrientation == ForgeDirection.DOWN) {
-                        ForgeDirection rot = oldBarrelRotation.getRotation(oldBarrelOrientation);
-                        for (int i = 0; i < 6; i++) {
-                            int j = ForgeDirection.getOrientation(i).getRotation(rot).ordinal();
-                            newSideArray[j] = oldSideArray[i];
-                            newSideMetaArray[j] = oldSideMetaArray[i];
-                        }
-                        oldBarrelOrientation = oldBarrelRotation;
-                        oldSideArray = newSideArray.clone();
-                        oldSideMetaArray = newSideMetaArray.clone();
-                    }
-
-                    int numberRotationsVAxis = 0;
-                    while (newBarrelRotation != oldBarrelRotation) {
-                        numberRotationsVAxis += 1;
-                        oldBarrelRotation = oldBarrelRotation.getRotation(ForgeDirection.UP);
-                    }
-
-                    for (int i = 0; i < 6; i++) {
-                        ForgeDirection idir = ForgeDirection.getOrientation(i);
-                        for (int rot = 0; rot < numberRotationsVAxis; rot++) {
-                            idir = idir.getRotation(ForgeDirection.UP);
-                        }
-                        newSideArray[idir.ordinal()] = oldSideArray[i];
-                        newSideMetaArray[idir.ordinal()] = oldSideMetaArray[i];
-                    }
-
-                    /* if new orientation is up/down, rotate appropriately */
-                    if (newBarrelOrientation == ForgeDirection.UP || newBarrelOrientation == ForgeDirection.DOWN) {
-                        oldSideArray = newSideArray.clone();
-                        oldSideMetaArray = newSideMetaArray.clone();
-                        ForgeDirection rot = newBarrelRotation.getRotation(newBarrelOrientation.getOpposite());
-                        for (int i = 0; i < 6; i++) {
-                            int j = ForgeDirection.getOrientation(i).getRotation(rot).ordinal();
-                            newSideArray[j] = oldSideArray[i];
-                            newSideMetaArray[j] = oldSideMetaArray[i];
-                        }
-                    }
-
-                    nbtContainer.setInteger("orientation", newBarrelOrientation.ordinal());
-                    nbtContainer.setInteger("rotation", newBarrelRotation.ordinal());
-                    nbtContainer.setIntArray("sideUpgrades", newSideArray);
-                    nbtContainer.setIntArray("sideMeta", newSideMetaArray);
+            if (oldBarrelOrientation == ForgeDirection.UP || oldBarrelOrientation == ForgeDirection.DOWN) {
+                ForgeDirection rot = oldBarrelRotation.getRotation(oldBarrelOrientation);
+                for (int i = 0; i < 6; i++) {
+                    int j = ForgeDirection.getOrientation(i).getRotation(rot).ordinal();
+                    newSideArray[j] = oldSideArray[i];
+                    newSideMetaArray[j] = oldSideMetaArray[i];
                 }
+                oldBarrelOrientation = oldBarrelRotation;
+                oldSideArray = newSideArray.clone();
+                oldSideMetaArray = newSideMetaArray.clone();
+            }
+
+            int numberRotationsVAxis = 0;
+            while (newBarrelRotation != oldBarrelRotation) {
+                numberRotationsVAxis += 1;
+                oldBarrelRotation = oldBarrelRotation.getRotation(ForgeDirection.UP);
+            }
+
+            for (int i = 0; i < 6; i++) {
+                ForgeDirection idir = ForgeDirection.getOrientation(i);
+                for (int rot = 0; rot < numberRotationsVAxis; rot++) {
+                    idir = idir.getRotation(ForgeDirection.UP);
+                }
+                newSideArray[idir.ordinal()] = oldSideArray[i];
+                newSideMetaArray[idir.ordinal()] = oldSideMetaArray[i];
+            }
+
+            if (newBarrelOrientation == ForgeDirection.UP || newBarrelOrientation == ForgeDirection.DOWN) {
+                oldSideArray = newSideArray.clone();
+                oldSideMetaArray = newSideMetaArray.clone();
+                ForgeDirection rot = newBarrelRotation.getRotation(newBarrelOrientation.getOpposite());
+                for (int i = 0; i < 6; i++) {
+                    int j = ForgeDirection.getOrientation(i).getRotation(rot).ordinal();
+                    newSideArray[j] = oldSideArray[i];
+                    newSideMetaArray[j] = oldSideMetaArray[i];
+                }
+            }
+
+            nbtContainer.setInteger("orientation", newBarrelOrientation.ordinal());
+            nbtContainer.setInteger("rotation", newBarrelRotation.ordinal());
+            nbtContainer.setIntArray("sideUpgrades", newSideArray);
+            nbtContainer.setIntArray("sideMeta", newSideMetaArray);
+        }
 
         world.setBlock(targX, targY, targZ, storedBlock, blockMeta, 1 + 2);
         TileEntity entity = world.getTileEntity(targX, targY, targZ);
         entity.readFromNBT(nbtContainer);
 
-        /* IC2 orientation fix part2 */
         if (classMap.get("ic2.api.tile.IWrenchable") != null
                 && classMap.get("ic2.api.tile.IWrenchable").isInstance(entity))
             this.fixIC2Orientation(entity, player, targY);
@@ -504,8 +480,6 @@ public class ItemBarrelMover extends Item {
             world.setBlockMetadataWithNotify(targX, targY, targZ, blockMeta, 1 + 2);
 
         else if (TEClassName.contains("forestry.factory.tiles.TileWorktable")) {
-            // Need to manually rebuild recipe outputs for memorized recipes.
-            // They don't get rebuilt when reading from NBT, for some reason.
             RecipeMemory recipeMemory = ((TileWorktable) entity).getMemory();
             for (int i = 0; i < RecipeMemory.capacity; i++) {
                 MemorizedRecipe recipe = recipeMemory.getRecipe(i);
@@ -549,12 +523,23 @@ public class ItemBarrelMover extends Item {
         if (tileIsASpawner(te)) return this.canPickSpawners();
         if (te instanceof TileEntityBarrel) return true;
         if (te instanceof TileEntityChest) return true;
-        if (isTileBlacklisted(te.getClass())) {
+
+        Class<? extends TileEntity> teClass = te.getClass();
+
+        if (isTileBlacklisted(teClass)) {
             return false;
         }
+
         for (Class c : classExtensions) {
             if (c != null && c.isInstance(te)) return true;
         }
+
+        for (Class<? extends TileEntity> extraClass : extraMovableTileEntityClasses) {
+            if (extraClass.isAssignableFrom(teClass)) {
+                 return true;
+            }
+        }
+
         return false;
     }
 
@@ -564,13 +549,12 @@ public class ItemBarrelMover extends Item {
                 return true;
             }
         }
-
         return false;
     }
 
-    private boolean isTileBlacklisted(Class clazz) {
-        for (Class<? extends TileEntity> tileClass : BetterBarrels.BlacklistedTileEntityClasses) {
-            if (clazz == tileClass) {
+    private boolean isTileBlacklisted(Class<? extends TileEntity> clazz) {
+        for (Class<? extends TileEntity> blacklistedClass : BetterBarrels.BlacklistedTileEntityClasses) {
+            if (blacklistedClass.isAssignableFrom(clazz)) {
                 return true;
             }
         }
@@ -638,7 +622,6 @@ public class ItemBarrelMover extends Item {
     protected boolean pickupContainer(ItemStack stack, EntityPlayer player, World world, int x, int y, int z) {
         TileEntity containerTE = world.getTileEntity(x, y, z);
         if (containerTE == null) return false;
-        // System.out.println(containerTE.getClass().toString());
 
         Block storedBlock = world.getBlock(x, y, z);
         int blockMeta = world.getBlockMetadata(x, y, z);
@@ -655,7 +638,7 @@ public class ItemBarrelMover extends Item {
         nbtTarget.setInteger("Meta", blockMeta);
         nbtTarget.setString("TEClass", containerTE.getClass().getName());
         nbtTarget.setBoolean("isSpawner", tileIsASpawner(containerTE));
-        nbtTarget.setTag("NBT", nbtContainer); // TODO: Check this, seems the nbt classes were streamlined somewhat
+        nbtTarget.setTag("NBT", nbtContainer);
 
         if (tagCompoundWrite != null) {
             ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
@@ -665,7 +648,6 @@ public class ItemBarrelMover extends Item {
                 outStream.close();
 
                 if (byteStream.toByteArray().length > 1048576) {
-                    // 1MB limit... MC limits at 2MB, but anything above this really starts to slow down the game
                     BarrelPacketHandler.INSTANCE.sendLocalizedChat(player, LocalizedChat.DOLLY_TOO_COMPLEX);
                     return false;
                 }
@@ -679,10 +661,6 @@ public class ItemBarrelMover extends Item {
         }
 
         stack.getTagCompound().setTag("Container", nbtTarget);
-
-        // if (containerTE instanceof TileEntityBarrel) {
-        // BSpaceStorageHandler.instance().unregisterEnderBarrel(((TileEntityBarrel)containerTE).id);
-        // }
 
         try {
             if (containerTE instanceof TileEntityChest) {
@@ -774,8 +752,6 @@ public class ItemBarrelMover extends Item {
 
     private String getBlockName(TileEntity tileEntity) {
 
-        // Block teBlock = Block.blocksList[tileEntity.getWorldObj().getBlockId(tileEntity.xCoord, tileEntity.yCoord,
-        // tileEntity.zCoord)];
         Block teBlock = tileEntity.getWorldObj().getBlock(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
 
         ItemStack pick = null;
