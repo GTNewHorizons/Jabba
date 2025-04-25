@@ -153,12 +153,15 @@ public class ItemBarrelMover extends Item {
                     extraMovableTileEntityClasses.add(teClass);
                     BetterBarrels.log.log(Level.INFO, "Adding " + className + " to Dolly movable list via config.");
                 } else {
-                    BetterBarrels.log.log(Level.WARN, "Class " + className + " from Dolly config is not a TileEntity subclass. Ignoring.");
+                    BetterBarrels.log.log(
+                            Level.WARN,
+                            "Class " + className + " from Dolly config is not a TileEntity subclass. Ignoring.");
                 }
             } catch (ClassNotFoundException e) {
-                BetterBarrels.log.log(Level.WARN, "Could not find class " + className + " specified in Dolly config. Ignoring.");
+                BetterBarrels.log
+                        .log(Level.WARN, "Could not find class " + className + " specified in Dolly config. Ignoring.");
             } catch (Throwable t) {
-                 BetterBarrels.log.log(Level.ERROR, "Error processing class " + className + " for Dolly config.", t);
+                BetterBarrels.log.log(Level.ERROR, "Error processing class " + className + " for Dolly config.", t);
             }
         }
     }
@@ -281,7 +284,8 @@ public class ItemBarrelMover extends Item {
 
         if (targetBlock == Blocks.snow) targSide = ForgeDirection.UP;
 
-        if (targetBlock != Blocks.vine && targetBlock != Blocks.tallgrass && targetBlock != Blocks.deadbush
+        if (targetBlock != Blocks.vine && targetBlock != Blocks.tallgrass
+                && targetBlock != Blocks.deadbush
                 && (targetBlock == null || !targetBlock.isReplaceable(world, targX, targY, targZ))) {
             if (targSide.equals(ForgeDirection.NORTH)) targZ -= 1;
             if (targSide.equals(ForgeDirection.SOUTH)) targZ += 1;
@@ -338,7 +342,8 @@ public class ItemBarrelMover extends Item {
         else if (TEClassName.contains("dmillerw.cchests.block.tile") && nbtContainer.hasKey("orientation"))
             nbtContainer.setByte("orientation", (byte) this.getBarrelOrientationOnPlacement(player).ordinal());
 
-        else if (TEClassName.contains("net.mcft.copy.betterstorage.block.tileentity") && nbtContainer.hasKey("orientation"))
+        else if (TEClassName.contains("net.mcft.copy.betterstorage.block.tileentity")
+                && nbtContainer.hasKey("orientation"))
             nbtContainer.setByte("orientation", (byte) this.getBarrelOrientationOnPlacement(player).ordinal());
 
         else if (TEClassName.contains("jds.bibliocraft.tileentities")) {
@@ -356,7 +361,8 @@ public class ItemBarrelMover extends Item {
             blockMeta = (this.fromForgeToBiblio(this.getBarrelOrientationOnPlacement(player)) == 3 ? 0
                     : this.fromForgeToBiblio(this.getBarrelOrientationOnPlacement(player)) + 1);
 
-        else if (TEClassName.contains("team.chisel.block.tileentity.TileEntityPresent") && nbtContainer.hasKey("rotation"))
+        else if (TEClassName.contains("team.chisel.block.tileentity.TileEntityPresent")
+                && nbtContainer.hasKey("rotation"))
             nbtContainer.setInteger("rotation", (byte) this.getBarrelOrientationOnPlacement(player).ordinal());
 
         else if (TEClassName.contains("com.jaquadro.minecraft.storagedrawers.block.tile") && nbtContainer.hasKey("Dir"))
@@ -536,7 +542,7 @@ public class ItemBarrelMover extends Item {
 
         for (Class<? extends TileEntity> extraClass : extraMovableTileEntityClasses) {
             if (extraClass.isAssignableFrom(teClass)) {
-                 return true;
+                return true;
             }
         }
 
@@ -808,16 +814,4 @@ public class ItemBarrelMover extends Item {
 
     private short fromForgeToBiblio(ForgeDirection side) {
         switch (side) {
-            case EAST:
-                return (short) 2;
-            case WEST:
-                return (short) 0;
-            case NORTH:
-                return (short) 1;
-            case SOUTH:
-                return (short) 3;
-            default:
-                return (short) -1;
-        }
-    }
-}
+ 
