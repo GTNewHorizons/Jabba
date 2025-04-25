@@ -218,8 +218,7 @@ public class BetterBarrels {
                     "ExtraDollyMovableTileEntities",
                     Configuration.CATEGORY_GENERAL,
                     extraDollyMovableTileEntityClassNames,
-                    "A list of additional canonical TileEntity class names that the Dolly should be able to move (use with caution)."
-            );
+                    "A list of additional canonical TileEntity class names that the Dolly should be able to move (use with caution).");
 
             disableDollyStacking = config.getBoolean(
                     "disableDollyStacking",

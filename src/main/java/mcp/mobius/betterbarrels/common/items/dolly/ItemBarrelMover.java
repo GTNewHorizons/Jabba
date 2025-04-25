@@ -792,26 +792,25 @@ public class ItemBarrelMover extends Item {
         return ForgeDirection.UNKNOWN;
     }
 
-    private short fromForgeToMC(ForgeDirection side) {
-        switch (side) {
-            case DOWN:
-                return (short) 0;
-            case UP:
-                return (short) 1;
-            case EAST:
-                return (short) 2;
-            case WEST:
-                return (short) 3;
-            case NORTH:
-                return (short) 4;
-            case SOUTH:
-                return (short) 5;
-            case UNKNOWN:
-                return (short) -1;
-        }
-        return -1;
-    }
-
     private short fromForgeToBiblio(ForgeDirection side) {
         switch (side) {
- 
+            case DOWN:
+                return 0;
+            case UP:
+                return 1;
+            case EAST:
+                return 2;
+            case WEST:
+                return 3;
+            case NORTH:
+                return 4;
+            case SOUTH:
+                return 5;
+            case UNKNOWN:
+                return -1;
+            default:
+                return -1;
+        }
+    }
+
+}
