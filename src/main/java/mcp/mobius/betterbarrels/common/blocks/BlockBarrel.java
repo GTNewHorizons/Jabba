@@ -210,9 +210,17 @@ public class BlockBarrel extends BlockContainer {
             // We drop the stacks
             if (barrelEntity.getStorage().hasItem() && !barrelEntity.getLinked()) {
                 barrelEntity.updateEntity();
-                while (barrelEntity.getStorage().getAmount() > 0) {
-                    ItemStack dropped = barrelEntity.getStorage().getStack();
-                    this.dropStack(world, dropped, x, y, z);
+
+                ItemStack rawStack = barrelEntity.getStorage().getItem().copy();
+                if (rawStack.isStackable()) {
+                    rawStack.stackSize = barrelEntity.getStorage().getAmount();
+                    dropBigStackInWorld(world, x, y, z, rawStack);
+                    barrelEntity.getStorage().setAmount(0);
+                } else {
+                    while (barrelEntity.getStorage().getAmount() > 0) {
+                        ItemStack dropped = barrelEntity.getStorage().getStack();
+                        this.dropStack(world, dropped, x, y, z);
+                    }
                 }
             }
 
@@ -235,6 +243,20 @@ public class BlockBarrel extends BlockContainer {
 
         // All finished here, let's ensure the TE is cleaned up...
         world.removeTileEntity(x, y, z);
+    }
+
+    private void dropBigStackInWorld(World world, int x, int y, int z, ItemStack stack) {
+        if (stack == null || stack.stackSize <= 0) return;
+        Random rand = world.rand;
+
+        float ex = rand.nextFloat() * .8f + .1f;
+        float ey = rand.nextFloat() * .8f + .1f;
+        float ez = rand.nextFloat() * .8f + .1f;
+
+        EntityItem entity = new EntityItem(world, x + ex, y + ey, z + ez, stack);
+        if (stack.hasTagCompound())
+            entity.getEntityItem().setTagCompound((NBTTagCompound) stack.getTagCompound().copy());
+        world.spawnEntityInWorld(entity);
     }
 
     /* REDSTONE HANDLING */
