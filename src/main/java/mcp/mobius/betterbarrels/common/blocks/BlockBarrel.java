@@ -173,8 +173,7 @@ public class BlockBarrel extends BlockContainer {
         TileEntity te = Utils.getTileEntityWithoutCreating(world, x, y, z);
         if (te == null) {
             return;
-        } else if (te instanceof TileEntityBarrel) {
-            TileEntityBarrel barrelEntity = (TileEntityBarrel) te;
+        } else if (te instanceof TileEntityBarrel barrelEntity) {
 
             // We drop the structural upgrades
             if (barrelEntity.coreUpgrades.levelStructural > 0) {
@@ -211,17 +210,9 @@ public class BlockBarrel extends BlockContainer {
             // We drop the stacks
             if (barrelEntity.getStorage().hasItem() && !barrelEntity.getLinked()) {
                 barrelEntity.updateEntity();
-                int ndroppedstacks = 0;
-                ItemStack droppedstack = barrelEntity.getStorage().getStack();
-                // TODO : is this just an amount limiter to prevent too many items spawning into the world?
-                // limits max number of dropped stacks to 64, perhaps should be limited to 64 * storage upgrade count?
-                while ((droppedstack != null) && (ndroppedstacks <= 64)) { // TODO: shouldn't this be the max stack size
-                                                                           // of the barrel, not 64?
-                    ndroppedstacks += 1;
-
-                    if (droppedstack != null) this.dropStack(world, droppedstack, x, y, z);
-
-                    droppedstack = barrelEntity.getStorage().getStack();
+                while (barrelEntity.getStorage().getAmount() > 0) {
+                    ItemStack dropped = barrelEntity.getStorage().getStack();
+                    this.dropStack(world, dropped, x, y, z);
                 }
             }
 
