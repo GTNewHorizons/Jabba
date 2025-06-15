@@ -6,4 +6,6 @@ dependencies {
     compileOnly('com.github.GTNewHorizons:ForestryMC:4.10.11:dev')
     compileOnly('curse.maven:minefactory-reloaded-66672:2366150')
     api('com.github.GTNewHorizons:BuildCraft:7.1.43:dev')
+
+    compileOnly("com.github.GTNewHorizons:Avaritia:1.67:dev")
 }

@@ -1,6 +1,9 @@
 package mcp.mobius.betterbarrels.common.blocks;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.function.Consumer;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -25,6 +28,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import fox.spiteful.avaritia.items.ItemMatterCluster;
 import mcp.mobius.betterbarrels.BetterBarrels;
 import mcp.mobius.betterbarrels.Utils;
 import mcp.mobius.betterbarrels.bspace.BSpaceStorageHandler;
@@ -212,15 +216,17 @@ public class BlockBarrel extends BlockContainer {
                 barrelEntity.updateEntity();
 
                 ItemStack rawStack = barrelEntity.getStorage().getItem().copy();
-                if (rawStack.isStackable()) {
-                    rawStack.stackSize = barrelEntity.getStorage().getAmount();
-                    dropBigStackInWorld(world, x, y, z, rawStack);
-                    barrelEntity.getStorage().setAmount(0);
-                } else {
-                    while (barrelEntity.getStorage().getAmount() > 0) {
-                        ItemStack dropped = barrelEntity.getStorage().getStack();
-                        this.dropStack(world, dropped, x, y, z);
+                if (rawStack.isStackable() && BetterBarrels.isAvaritiaLoaded) {
+                    /* May not be used */
+                    List<ItemStack> stacks = new ArrayList<>();
+                    forEachSplitStack(barrelEntity, stacks::add);
+
+                    List<ItemStack> clusters = ItemMatterCluster.makeClusters(stacks);
+                    for (ItemStack stack : clusters) {
+                        dropStackInBatches(world, x, y, z, stack);
                     }
+                } else {
+                    forEachSplitStack(barrelEntity, stack -> dropStackInBatches(world, x, y, z, stack));
                 }
             }
 
@@ -257,6 +263,45 @@ public class BlockBarrel extends BlockContainer {
         if (stack.hasTagCompound())
             entity.getEntityItem().setTagCompound((NBTTagCompound) stack.getTagCompound().copy());
         world.spawnEntityInWorld(entity);
+    }
+
+    private void forEachSplitStack(TileEntityBarrel tile, Consumer<ItemStack> forEachStack) {
+        while (tile.getStorage().getAmount() > 0) {
+            ItemStack stack = tile.getStorage().getStack();
+            if (stack == null || stack.stackSize == 0) break;
+
+            forEachStack.accept(stack);
+        }
+    }
+
+    private void dropStackInBatches(World world, int x, int y, int z, ItemStack stack) {
+        Random rand = world.rand;
+
+        float ex = rand.nextFloat() * .8f + .1f;
+        float ey = rand.nextFloat() * .8f + .1f;
+        float ez = rand.nextFloat() * .8f + .1f;
+
+        EntityItem entity;
+        for (; stack.stackSize > 0; world.spawnEntityInWorld(entity)) {
+            int stackPartSize = rand.nextInt(21) + 10;
+            if (stackPartSize > stack.stackSize) stackPartSize = stack.stackSize;
+
+            stack.stackSize -= stackPartSize;
+            entity = new EntityItem(
+                    world,
+                    x + ex,
+                    y + ey,
+                    z + ez,
+                    new ItemStack(stack.getItem(), stackPartSize, stack.getItemDamage()));
+
+            float motionUnit = .05f;
+            entity.motionX = rand.nextGaussian() * motionUnit;
+            entity.motionY = rand.nextGaussian() * motionUnit + .2f;
+            entity.motionZ = rand.nextGaussian() * motionUnit;
+
+            if (stack.hasTagCompound())
+                entity.getEntityItem().setTagCompound((NBTTagCompound) stack.getTagCompound().copy());
+        }
     }
 
     /* REDSTONE HANDLING */
