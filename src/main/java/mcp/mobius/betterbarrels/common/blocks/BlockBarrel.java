@@ -256,20 +256,6 @@ public class BlockBarrel extends BlockContainer {
         }
     }
 
-    private void dropBigStackInWorld(World world, int x, int y, int z, ItemStack stack) {
-        if (stack == null || stack.stackSize <= 0) return;
-        Random rand = world.rand;
-
-        float ex = rand.nextFloat() * .8f + .1f;
-        float ey = rand.nextFloat() * .8f + .1f;
-        float ez = rand.nextFloat() * .8f + .1f;
-
-        EntityItem entity = new EntityItem(world, x + ex, y + ey, z + ez, stack);
-        if (stack.hasTagCompound())
-            entity.getEntityItem().setTagCompound((NBTTagCompound) stack.getTagCompound().copy());
-        world.spawnEntityInWorld(entity);
-    }
-
     private void forEachSplitStack(TileEntityBarrel tile, Consumer<ItemStack> forEachStack) {
         while (tile.getStorage().getAmount() > 0) {
             ItemStack stack = tile.getStorage().getStack();
