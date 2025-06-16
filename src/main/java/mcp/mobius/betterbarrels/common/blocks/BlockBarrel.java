@@ -26,6 +26,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import fox.spiteful.avaritia.items.ItemMatterCluster;
@@ -216,15 +217,8 @@ public class BlockBarrel extends BlockContainer {
                 barrelEntity.updateEntity();
 
                 ItemStack rawStack = barrelEntity.getStorage().getItem().copy();
-                if (rawStack.isStackable() && BetterBarrels.isAvaritiaLoaded) {
-                    /* May not be used */
-                    List<ItemStack> stacks = new ArrayList<>();
-                    forEachSplitStack(barrelEntity, stacks::add);
-
-                    List<ItemStack> clusters = ItemMatterCluster.makeClusters(stacks);
-                    for (ItemStack stack : clusters) {
-                        dropStackInBatches(world, x, y, z, stack);
-                    }
+                if (BetterBarrels.isAvaritiaLoaded && rawStack.isStackable()) {
+                    dropMatterCluster(world, x, y, z, barrelEntity);
                 } else {
                     forEachSplitStack(barrelEntity, stack -> dropStackInBatches(world, x, y, z, stack));
                 }
@@ -249,6 +243,17 @@ public class BlockBarrel extends BlockContainer {
 
         // All finished here, let's ensure the TE is cleaned up...
         world.removeTileEntity(x, y, z);
+    }
+
+    @Optional.Method(modid = "Avaritia")
+    private void dropMatterCluster(World world, int x, int y, int z, TileEntityBarrel barrelEntity) {
+        List<ItemStack> stacks = new ArrayList<>();
+        forEachSplitStack(barrelEntity, stacks::add);
+
+        List<ItemStack> clusters = ItemMatterCluster.makeClusters(stacks);
+        for (ItemStack stack : clusters) {
+            dropStackInBatches(world, x, y, z, stack);
+        }
     }
 
     private void dropBigStackInWorld(World world, int x, int y, int z, ItemStack stack) {
