@@ -108,6 +108,8 @@ public class BetterBarrels {
             "ic2.core.block.machine.tileentity.TileEntityNuke" };
     public static HashSet<Class<? extends TileEntity>> BlacklistedTileEntityClasses = new HashSet<Class<? extends TileEntity>>();
 
+    public static boolean isAvaritiaLoaded;
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         config = new Configuration(event.getSuggestedConfigurationFile());
@@ -292,6 +294,9 @@ public class BetterBarrels {
     public void load(FMLInitializationEvent event) {
         if (!Loader.isModLoaded("dreamcraft")) {
             RecipeHandler.instance().registerRecipes();
+        }
+        if (Loader.isModLoaded("Avaritia")) {
+            isAvaritiaLoaded = true;
         }
         GameRegistry.registerTileEntity(TileEntityBarrel.class, "TileEntityBarrel");
         FMLCommonHandler.instance().bus().register(ServerTickHandler.INSTANCE);
