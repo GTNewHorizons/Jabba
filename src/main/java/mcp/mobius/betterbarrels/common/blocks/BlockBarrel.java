@@ -1,6 +1,9 @@
 package mcp.mobius.betterbarrels.common.blocks;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.function.Consumer;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -23,8 +26,11 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import fox.spiteful.avaritia.items.ItemMatterCluster;
 import mcp.mobius.betterbarrels.BetterBarrels;
 import mcp.mobius.betterbarrels.Utils;
 import mcp.mobius.betterbarrels.bspace.BSpaceStorageHandler;
@@ -80,7 +86,7 @@ public class BlockBarrel extends BlockContainer {
 
         TileEntity te = world.getTileEntity(x, y, z);
 
-        if (te == null || !(te instanceof TileEntityBarrel)) {
+        if (!(te instanceof TileEntityBarrel)) {
             BetterBarrels.log.error(
                     "TileEntity for barrel placed at (X:" + x
                             + ", Y:"
@@ -133,37 +139,6 @@ public class BlockBarrel extends BlockContainer {
         return true;
     }
 
-    private void dropStack(World world, ItemStack stack, int x, int y, int z) {
-        Random random = new Random();
-        float var10 = random.nextFloat() * 0.8F + 0.1F;
-        float var11 = random.nextFloat() * 0.8F + 0.1F;
-        EntityItem items;
-
-        for (float var12 = random.nextFloat() * 0.8F + 0.1F; stack.stackSize > 0; world.spawnEntityInWorld(items)) {
-            int var13 = random.nextInt(21) + 10;
-
-            if (var13 > stack.stackSize) {
-                var13 = stack.stackSize;
-            }
-
-            stack.stackSize -= var13;
-            items = new EntityItem(
-                    world,
-                    x + var10,
-                    y + var11,
-                    z + var12,
-                    new ItemStack(stack.getItem(), var13, stack.getItemDamage()));
-            float var15 = 0.05F;
-            items.motionX = (float) random.nextGaussian() * var15;
-            items.motionY = (float) random.nextGaussian() * var15 + 0.2F;
-            items.motionZ = (float) random.nextGaussian() * var15;
-
-            if (stack.hasTagCompound()) {
-                items.getEntityItem().setTagCompound((NBTTagCompound) stack.getTagCompound().copy());
-            }
-        }
-    }
-
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
         if (world.isRemote) return;
@@ -180,7 +155,7 @@ public class BlockBarrel extends BlockContainer {
                 int currentUpgrade = barrelEntity.coreUpgrades.levelStructural;
                 while (currentUpgrade > 0) {
                     ItemStack droppedStack = new ItemStack(BetterBarrels.itemUpgradeStructural, 1, currentUpgrade - 1);
-                    this.dropStack(world, droppedStack, x, y, z);
+                    spawnStackInWorld(world, x, y, z, droppedStack);
                     currentUpgrade -= 1;
                 }
             }
@@ -188,7 +163,7 @@ public class BlockBarrel extends BlockContainer {
             // We drop the core upgrades
             for (UpgradeCore core : barrelEntity.coreUpgrades.upgradeList) {
                 ItemStack droppedStack = new ItemStack(BetterBarrels.itemUpgradeCore, 1, core.ordinal());
-                this.dropStack(world, droppedStack, x, y, z);
+                spawnStackInWorld(world, x, y, z, droppedStack);
             }
 
             // We drop the side upgrades
@@ -199,7 +174,7 @@ public class BlockBarrel extends BlockContainer {
                             upgrade,
                             1,
                             UpgradeSide.mapMeta[barrelEntity.sideUpgrades[i]]);
-                    this.dropStack(world, droppedStack, x, y, z);
+                    spawnStackInWorld(world, x, y, z, droppedStack);
                 }
             }
 
@@ -210,10 +185,7 @@ public class BlockBarrel extends BlockContainer {
             // We drop the stacks
             if (barrelEntity.getStorage().hasItem() && !barrelEntity.getLinked()) {
                 barrelEntity.updateEntity();
-                while (barrelEntity.getStorage().getAmount() > 0) {
-                    ItemStack dropped = barrelEntity.getStorage().getStack();
-                    this.dropStack(world, dropped, x, y, z);
-                }
+                dropBarrelContents(world, x, y, z, barrelEntity);
             }
 
             try {
@@ -235,6 +207,122 @@ public class BlockBarrel extends BlockContainer {
 
         // All finished here, let's ensure the TE is cleaned up...
         world.removeTileEntity(x, y, z);
+    }
+
+    private static void forEachStackOfBarrel(TileEntityBarrel barrel, Consumer<ItemStack> action) {
+        while (barrel.getStorage().getAmount() > 0) {
+            ItemStack stack = barrel.getStorage().getStack();
+            if (stack == null || stack.stackSize == 0) break;
+            action.accept(stack);
+        }
+    }
+
+    /**
+     * Spawns a copy of the stack in the world, breaks it down in multiple stacks if the stack size exceeds the
+     * {@link ItemStack#getMaxStackSize()}
+     */
+    private static void spawnStackInWorld(World world, int x, int y, int z, ItemStack stack) {
+        final Random rand = world.rand;
+        while (stack.stackSize > 0) {
+            final int stackSize = Math.min(stack.stackSize, stack.getMaxStackSize());
+            stack.stackSize -= stackSize;
+            final ItemStack newStack = new ItemStack(stack.getItem(), stackSize, stack.getItemDamage());
+            if (stack.hasTagCompound()) {
+                newStack.setTagCompound((NBTTagCompound) stack.getTagCompound().copy());
+            }
+            final EntityItem entityItem = new EntityItem(
+                    world,
+                    x + rand.nextFloat() * 0.8f + 0.1f,
+                    y + rand.nextFloat() * 0.8f + 0.1f,
+                    z + rand.nextFloat() * 0.8f + 0.1f,
+                    newStack);
+            entityItem.motionX = rand.nextGaussian() * 0.05f;
+            entityItem.motionY = rand.nextGaussian() * 0.05f + 0.2f;
+            entityItem.motionZ = rand.nextGaussian() * 0.05f;
+            world.spawnEntityInWorld(entityItem);
+        }
+    }
+
+    /**
+     * Drops stacks with an "illegal" size that will contain all the items in one stack. The downside of this method is
+     * that if the ItemStack is still on the ground when the chunk is saved (stopping game, or going away). It will not
+     * save the size of the ItemStack correctly since the size is stored as a byte (max 255)
+     * {@link net.minecraft.item.ItemStack#writeToNBT(NBTTagCompound)}, ITEMS WILL BE LOST !!
+     */
+    private static void dropMergedStacks(TileEntityBarrel barrel, World world, int x, int y, int z) {
+        final ItemStack storedStack = barrel.getStorage().getItem();
+        if (storedStack.isStackable()) {
+            final ItemStack copy = storedStack.copy();
+            copy.stackSize = barrel.getStorage().getAmount();
+            dropBigStackInWorld(world, x, y, z, copy);
+        } else {
+            dropAllStacksOfBarrel(barrel, world, x, y, z);
+        }
+    }
+
+    /**
+     * Drops an ItemStack with an "illegal" size that will contain all the items in one stack. The downside of this
+     * method is that if the ItemStack is still on the ground when the chunk is saved (stopping game, or going away). It
+     * will not save the size of the ItemStack correctly since the size is stored as a byte (max 255)
+     * {@link net.minecraft.item.ItemStack#writeToNBT(NBTTagCompound)}, ITEMS WILL BE LOST !!
+     */
+    private static void dropBigStackInWorld(World world, int x, int y, int z, ItemStack stack) {
+        if (stack == null || stack.stackSize <= 0) return;
+        Random rand = world.rand;
+        float ex = rand.nextFloat() * 0.8f + 0.1f;
+        float ey = rand.nextFloat() * 0.8f + 0.1f;
+        float ez = rand.nextFloat() * 0.8f + 0.1f;
+        EntityItem entity = new EntityItem(world, x + ex, y + ey, z + ez, stack);
+        if (stack.hasTagCompound()) {
+            entity.getEntityItem().setTagCompound((NBTTagCompound) stack.getTagCompound().copy());
+        }
+        world.spawnEntityInWorld(entity);
+    }
+
+    private static void dropBarrelContents(World world, int x, int y, int z, TileEntityBarrel barrel) {
+        final int stacksToSpawn = countAmountOfStacksToSpawn(barrel);
+        if (stacksToSpawn == 0) return;
+        if (stacksToSpawn <= 64) {
+            dropAllStacksOfBarrel(barrel, world, x, y, z);
+        } else if (Loader.isModLoaded("Avaritia")) {
+            dropAvaritiaClusters(barrel, world, x, y, z);
+        } else {
+            dropMergedStacks(barrel, world, x, y, z);
+        }
+    }
+
+    /**
+     * Counts the amount of stacks that would drop if we were to break this barrel.
+     */
+    private static int countAmountOfStacksToSpawn(TileEntityBarrel barrel) {
+        final ItemStack stack = barrel.getStorage().getItem();
+        if (stack == null || stack.getItem() == null) return 0;
+        int stackCount = 0;
+        final int maxStackSize = stack.getMaxStackSize();
+        final int storedItemCount = barrel.getStorage().getAmount();
+        stackCount += storedItemCount / maxStackSize;
+        if (storedItemCount % maxStackSize != 0) stackCount++;
+        return stackCount;
+    }
+
+    /**
+     * Drops Avaritia matter clusters with all the items.
+     */
+    @Optional.Method(modid = "Avaritia")
+    private static void dropAvaritiaClusters(TileEntityBarrel barrel, World world, int x, int y, int z) {
+        List<ItemStack> list = new ArrayList<>();
+        forEachStackOfBarrel(barrel, list::add);
+        List<ItemStack> clusters = ItemMatterCluster.makeClusters(list);
+        for (ItemStack stack : clusters) {
+            spawnStackInWorld(world, x, y, z, stack);
+        }
+    }
+
+    /**
+     * Drops all the stacks contained is this barrel.
+     */
+    private static void dropAllStacksOfBarrel(TileEntityBarrel barrel, World world, int x, int y, int z) {
+        forEachStackOfBarrel(barrel, stack -> spawnStackInWorld(world, x, y, z, stack));
     }
 
     /* REDSTONE HANDLING */
