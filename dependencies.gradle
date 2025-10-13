@@ -1,10 +1,10 @@
 // Add your dependencies here
 
 dependencies {
-    implementation('com.github.GTNewHorizons:waila:1.8.10:dev')
+    implementation('com.github.GTNewHorizons:waila:1.9.0:dev')
 
-    compileOnly('com.github.GTNewHorizons:ForestryMC:4.10.13:dev')
+    compileOnly('com.github.GTNewHorizons:ForestryMC:4.10.17:dev')
     compileOnly('curse.maven:minefactory-reloaded-66672:2366150')
-    compileOnly("com.github.GTNewHorizons:Avaritia:1.67:dev")
-    api('com.github.GTNewHorizons:BuildCraft:7.1.44:dev')
+    compileOnly("com.github.GTNewHorizons:Avaritia:1.75:dev")
+    api('com.github.GTNewHorizons:BuildCraft:7.1.45:dev')
 }
