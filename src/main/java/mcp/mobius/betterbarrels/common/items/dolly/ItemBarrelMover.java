@@ -121,6 +121,8 @@ public class ItemBarrelMover extends Item {
 
         classExtensionsNames.add("ganymedes01.etfuturum.tileentities.TileEntityBarrel");
 
+        classExtensionsNames.add("wanion.avaritiaddons.block.chest.TileEntityAvaritiaddonsChest");
+
         for (String s : classExtensionsNames) {
             try {
                 classExtensions.add(Class.forName(s));
