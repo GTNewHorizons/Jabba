@@ -123,6 +123,8 @@ public class ItemBarrelMover extends Item {
 
         classExtensionsNames.add("binnie.core.machines.TileEntityMachine");
 
+        classExtensionsNames.add("wanion.avaritiaddons.block.chest.TileEntityAvaritiaddonsChest");
+
         for (String s : classExtensionsNames) {
             try {
                 classExtensions.add(Class.forName(s));
