@@ -16,6 +16,20 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import com.gtnewhorizon.gtnhlib.capability.CapabilityProvider;
+import com.gtnewhorizon.gtnhlib.capability.item.ItemIO;
+import com.gtnewhorizon.gtnhlib.capability.item.ItemSink;
+import com.gtnewhorizon.gtnhlib.capability.item.ItemSource;
+import com.gtnewhorizon.gtnhlib.item.AbstractInventoryIterator;
+import com.gtnewhorizon.gtnhlib.item.ImmutableItemStack;
+import com.gtnewhorizon.gtnhlib.item.InventoryIterator;
+import com.gtnewhorizon.gtnhlib.item.ItemStackPredicate;
+import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
+import com.gtnewhorizon.gtnhlib.item.SimpleItemIO;
+import com.gtnewhorizon.gtnhlib.util.ItemUtil;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
@@ -25,7 +39,6 @@ import mcp.mobius.betterbarrels.ServerTickHandler;
 import mcp.mobius.betterbarrels.Utils;
 import mcp.mobius.betterbarrels.bspace.BSpaceStorageHandler;
 import mcp.mobius.betterbarrels.common.LocalizedChat;
-import mcp.mobius.betterbarrels.common.blocks.logic.LogicHopper;
 import mcp.mobius.betterbarrels.common.items.ItemBarrelHammer;
 import mcp.mobius.betterbarrels.common.items.ItemTuningFork;
 import mcp.mobius.betterbarrels.common.items.upgrades.ItemUpgradeCore;
@@ -45,7 +58,7 @@ import mcp.mobius.betterbarrels.network.Message0x08LinkUpdate;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 
 @Optional.Interface(iface = "powercrystals.minefactoryreloaded.api.IDeepStorageUnit", modid = "MineFactoryReloaded")
-public class TileEntityBarrel extends TileEntity implements ISidedInventory, IDeepStorageUnit {
+public class TileEntityBarrel extends TileEntity implements ISidedInventory, IDeepStorageUnit, CapabilityProvider {
 
     private static int version = 5;
 
@@ -168,11 +181,50 @@ public class TileEntityBarrel extends TileEntity implements ISidedInventory, IDe
         if (this.worldObj.isRemote) return;
 
         if (++this.nTicks % 8 == 0) {
-            if (LogicHopper.INSTANCE.run(this)) {
-                this.markDirty();
+            IBarrelStorage storage = this.getStorage();
+
+            for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
+                if (this.sideUpgrades[side.ordinal()] == UpgradeSide.HOPPER) {
+                    boolean push = (this.sideMetadata[side.ordinal()] & 1) == UpgradeSide.HOPPER_PUSH;
+
+                    // shortcut out if no work
+                    if (push) {
+                        if (!storage.hasItem() || storage.getAmount() <= 0) continue;
+                    } else {
+                        if (storage.getAmount() >= storage.getMaxStoredCount()) continue;
+                    }
+
+                    TileEntity adjacent = this.getWorldObj().getTileEntity(
+                        this.xCoord + side.offsetX,
+                        this.yCoord + side.offsetY,
+                        this.zCoord + side.offsetZ);
+
+                    transfer(this, side, adjacent, push, storage.getItem());
+                }
             }
+
             this.nTicks = 0;
         }
+    }
+
+    private void transfer(TileEntity barrel, ForgeDirection side, TileEntity adj, boolean push, ItemStack filter) {
+        ItemTransfer transfer = new ItemTransfer();
+
+        if (push) {
+            transfer.push(barrel, side, adj);
+        } else {
+            transfer.pull(barrel, side, adj);
+        }
+
+        transfer.setMaxTotalTransferred(16);
+        transfer.setStacksToTransfer(16);
+        transfer.setMaxItemsPerTransfer(16);
+
+        if (filter != null) {
+            transfer.setFilter(ItemStackPredicate.matches(filter));
+        }
+
+        transfer.transfer();
     }
 
     void startTicking() {
@@ -803,5 +855,68 @@ public class TileEntityBarrel extends TileEntity implements ISidedInventory, IDe
     @Override
     public int getMaxStoredCount() {
         return this.getStorage().getMaxStoredCount();
+    }
+
+    @Override
+    public <T> @Nullable T getCapability(@NotNull Class<T> capability, @NotNull ForgeDirection side) {
+        if (capability == ItemSource.class || capability == ItemSink.class || capability == ItemIO.class) {
+            return capability.cast(new BarrelItemIO(this));
+        }
+
+        return null;
+    }
+
+    private static class BarrelItemIO extends SimpleItemIO {
+        public final TileEntityBarrel barrel;
+
+        public BarrelItemIO(TileEntityBarrel barrel) {
+            this.barrel = barrel;
+        }
+
+        private static final int[] SLOTS = { 0 };
+
+        @Override
+        protected @NotNull InventoryIterator iterator(int[] allowedSlots) {
+            return new AbstractInventoryIterator(SLOTS, allowedSlots) {
+
+                @Override
+                protected ItemStack getStackInSlot(int slot) {
+                    if (slot != 0) return null;
+
+                    return ItemUtil.copy(barrel.getStoredItemType());
+                }
+
+                @Override
+                public ItemStack extract(int amount, boolean forced) {
+                    ItemStack stored = barrel.getStoredItemType();
+
+                    if (stored == null) return null;
+
+                    int toExtract = Math.min(amount, stored.stackSize);
+
+                    barrel.setStoredItemCount(stored.stackSize - toExtract);
+
+                    return ItemUtil.copyAmount(toExtract, stored);
+                }
+
+                @Override
+                public int insert(ImmutableItemStack stack, boolean forced) {
+                    ItemStack stored = barrel.getStoredItemType();
+
+                    if (stored != null && !stack.matches(stored)) return stack.getStackSize();
+
+                    int storedAmount = stored == null ? 0 : stored.stackSize;
+                    int toInsert = Math.min(stack.getStackSize(), barrel.getMaxStoredCount() - storedAmount);
+
+                    if (stored == null) {
+                        barrel.setStoredItemType(stack.toStack(1), 1);
+                    }
+
+                    barrel.setStoredItemCount(storedAmount + toInsert);
+
+                    return stack.getStackSize() - toInsert;
+                }
+            };
+        }
     }
 }
