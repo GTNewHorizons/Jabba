@@ -44,7 +44,7 @@ import mcp.mobius.betterbarrels.network.BarrelPacketHandler;
         modid = BetterBarrels.modid,
         name = BetterBarrels.modid,
         version = "GRADLETOKEN_VERSION",
-        dependencies = "after:Waila;after:NotEnoughItems")
+        dependencies = "after:Waila;after:NotEnoughItems;required-after:gtnhlib;")
 public class BetterBarrels {
 
     private static boolean DEBUG = Boolean.parseBoolean(System.getProperty("mcp.mobius.debugJabba", "false"));
