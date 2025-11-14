@@ -30,6 +30,7 @@ import com.gtnewhorizon.gtnhlib.item.ItemStackPredicate;
 import com.gtnewhorizon.gtnhlib.item.ItemTransfer;
 import com.gtnewhorizon.gtnhlib.item.SimpleItemIO;
 import com.gtnewhorizon.gtnhlib.util.ItemUtil;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
@@ -195,9 +196,9 @@ public class TileEntityBarrel extends TileEntity implements ISidedInventory, IDe
                     }
 
                     TileEntity adjacent = this.getWorldObj().getTileEntity(
-                        this.xCoord + side.offsetX,
-                        this.yCoord + side.offsetY,
-                        this.zCoord + side.offsetZ);
+                            this.xCoord + side.offsetX,
+                            this.yCoord + side.offsetY,
+                            this.zCoord + side.offsetZ);
 
                     transfer(this, side, adjacent, push, storage.getItem());
                 }
@@ -867,6 +868,7 @@ public class TileEntityBarrel extends TileEntity implements ISidedInventory, IDe
     }
 
     private static class BarrelItemIO extends SimpleItemIO {
+
         public final TileEntityBarrel barrel;
 
         public BarrelItemIO(TileEntityBarrel barrel) {
