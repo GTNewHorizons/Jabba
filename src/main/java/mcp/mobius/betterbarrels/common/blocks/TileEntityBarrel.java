@@ -879,46 +879,64 @@ public class TileEntityBarrel extends TileEntity implements ISidedInventory, IDe
 
         @Override
         protected @NotNull InventoryIterator iterator(int[] allowedSlots) {
-            return new AbstractInventoryIterator(SLOTS, allowedSlots) {
+            return new TileEntityBarrelInventoryIterator(BarrelItemIO.SLOTS, allowedSlots, false);
+        }
 
-                @Override
-                protected ItemStack getStackInSlot(int slot) {
-                    if (slot != 0) return null;
+        @Override
+        public @Nullable InventoryIterator simulatedSinkIterator() {
+            return new TileEntityBarrelInventoryIterator(BarrelItemIO.SLOTS, allowedSinkSlots, true);
+        }
 
-                    return ItemUtil.copy(barrel.getStoredItemType());
-                }
+        private class TileEntityBarrelInventoryIterator extends AbstractInventoryIterator {
 
-                @Override
-                public ItemStack extract(int amount, boolean forced) {
-                    ItemStack stored = barrel.getStoredItemType();
+            private final boolean simulated;
 
-                    if (stored == null) return null;
+            public TileEntityBarrelInventoryIterator(int[] slots, int[] allowedSlots, boolean simulated) {
+                super(slots, allowedSlots);
+                this.simulated = simulated;
+            }
 
-                    int toExtract = Math.min(amount, stored.stackSize);
+            @Override
+            protected ItemStack getStackInSlot(int slot) {
+                if (slot != 0) return null;
 
+                return ItemUtil.copy(barrel.getStoredItemType());
+            }
+
+            @Override
+            public ItemStack extract(int amount, boolean forced) {
+                ItemStack stored = barrel.getStoredItemType();
+
+                if (stored == null) return null;
+
+                int toExtract = Math.min(amount, stored.stackSize);
+
+                if (!simulated) {
                     barrel.setStoredItemCount(stored.stackSize - toExtract);
-
-                    return ItemUtil.copyAmount(toExtract, stored);
                 }
 
-                @Override
-                public int insert(ImmutableItemStack stack, boolean forced) {
-                    ItemStack stored = barrel.getStoredItemType();
+                return ItemUtil.copyAmount(toExtract, stored);
+            }
 
-                    if (stored != null && !stack.matches(stored)) return stack.getStackSize();
+            @Override
+            public int insert(ImmutableItemStack stack, boolean forced) {
+                ItemStack stored = barrel.getStoredItemType();
 
-                    int storedAmount = stored == null ? 0 : stored.stackSize;
-                    int toInsert = Math.min(stack.getStackSize(), barrel.getMaxStoredCount() - storedAmount);
+                if (stored != null && !stack.matches(stored)) return stack.getStackSize();
 
+                int storedAmount = stored == null ? 0 : stored.stackSize;
+                int toInsert = Math.min(stack.getStackSize(), barrel.getMaxStoredCount() - storedAmount);
+
+                if (!simulated) {
                     if (stored == null) {
                         barrel.setStoredItemType(stack.toStack(1), 1);
                     }
 
                     barrel.setStoredItemCount(storedAmount + toInsert);
-
-                    return stack.getStackSize() - toInsert;
                 }
-            };
+
+                return stack.getStackSize() - toInsert;
+            }
         }
     }
 }
