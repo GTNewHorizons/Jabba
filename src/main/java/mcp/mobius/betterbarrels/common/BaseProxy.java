@@ -25,7 +25,7 @@ public class BaseProxy {
     public void postInit() {}
 
     public int getBarrelRenderId() {
-        throw new IllegalStateException("Called client method from dedicated server");
+        return -1;
     }
 
     public void initialiseClientData(int[] overrideColorData) {}
