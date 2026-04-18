@@ -17,15 +17,16 @@ public class BaseProxy {
     }
 
     public void updatePlayerInventory(EntityPlayer player) {
-        if (player instanceof EntityPlayerMP) {
-            EntityPlayerMP playerMP = (EntityPlayerMP) player;
+        if (player instanceof EntityPlayerMP playerMP) {
             playerMP.sendContainerToPlayer(playerMP.inventoryContainer);
         }
     }
 
     public void postInit() {}
 
-    public void checkRenderers() {}
+    public int getBarrelRenderId() {
+        throw new IllegalStateException("Called client method from dedicated server");
+    }
 
     public void initialiseClientData(int[] overrideColorData) {}
 }
