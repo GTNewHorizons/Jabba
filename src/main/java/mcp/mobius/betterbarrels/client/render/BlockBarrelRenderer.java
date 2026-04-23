@@ -9,11 +9,13 @@ import net.minecraft.world.IBlockAccess;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
-import mcp.mobius.betterbarrels.BetterBarrels;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import mcp.mobius.betterbarrels.common.StructuralLevel;
 import mcp.mobius.betterbarrels.common.blocks.TileEntityBarrel;
 
 public class BlockBarrelRenderer implements ISimpleBlockRenderingHandler {
+
+    private static final int renderID = RenderingRegistry.getNextAvailableRenderId();
 
     @Override
     public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer) {
@@ -73,6 +75,6 @@ public class BlockBarrelRenderer implements ISimpleBlockRenderingHandler {
 
     @Override
     public int getRenderId() {
-        return BetterBarrels.blockBarrelRendererID;
+        return renderID;
     }
 }

@@ -17,15 +17,16 @@ public class BaseProxy {
     }
 
     public void updatePlayerInventory(EntityPlayer player) {
-        if (player instanceof EntityPlayerMP) {
-            EntityPlayerMP playerMP = (EntityPlayerMP) player;
+        if (player instanceof EntityPlayerMP playerMP) {
             playerMP.sendContainerToPlayer(playerMP.inventoryContainer);
         }
     }
 
     public void postInit() {}
 
-    public void checkRenderers() {}
+    public int getBarrelRenderId() {
+        return -1;
+    }
 
     public void initialiseClientData(int[] overrideColorData) {}
 }

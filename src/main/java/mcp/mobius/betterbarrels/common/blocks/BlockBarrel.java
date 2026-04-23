@@ -439,9 +439,7 @@ public class BlockBarrel extends BlockContainer {
     /* Rendering stuff */
     @Override
     public int getRenderType() {
-        BetterBarrels.proxy.checkRenderers();
-
-        return BetterBarrels.blockBarrelRendererID;
+        return BetterBarrels.proxy.getBarrelRenderId();
     }
 
     @Override

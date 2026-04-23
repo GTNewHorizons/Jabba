@@ -93,8 +93,6 @@ public class BetterBarrels {
     public static Item itemFoldedMover = null;
     public static long limiterDelay = 500;
 
-    public static int blockBarrelRendererID = -1;
-
     public static boolean allowVerticalPlacement = true;
     public static float verticalPlacementRange = 1f;
 
