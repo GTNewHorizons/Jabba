@@ -24,6 +24,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -48,6 +49,7 @@ public class ItemBarrelMover extends Item {
     protected DollyType type = DollyType.NORMAL;
 
     private static final String PREVENT_FOLD_TAG_KEY = "prevent_fold";
+    private static final float STORAGE_DRAWERS_VERTICAL_PITCH_THRESHOLD = 65f;
     protected static ArrayList<Class> classExtensions = new ArrayList<Class>();
     protected static ArrayList<String> classExtensionsNames = new ArrayList<String>();
     protected static HashMap<String, Class> classMap = new HashMap<String, Class>();
@@ -112,6 +114,8 @@ public class ItemBarrelMover extends Item {
 
         classExtensionsNames.add("com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers");
         classExtensionsNames.add("com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityCompDrawers");
+        classExtensionsNames.add("com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawersComp");
+        classExtensionsNames.add("com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityController");
 
         classExtensionsNames.add("com.bluepowermod.tile.TileBase");
 
@@ -374,8 +378,13 @@ public class ItemBarrelMover extends Item {
         // nbtContainer.setByte("facing", (byte)this.getBarrelOrientationOnPlacement(player).ordinal());
 
         /* Storage Drawers Orientation Correction */
-        else if (TEClassName.contains("com.jaquadro.minecraft.storagedrawers.block.tile") && nbtContainer.hasKey("Dir"))
-            nbtContainer.setInteger("Dir", (short) this.getBarrelOrientationOnPlacement(player).ordinal());
+        else if (TEClassName.contains("com.jaquadro.minecraft.storagedrawers.block.tile")
+                && nbtContainer.hasKey("Dir")) {
+                    StorageDrawersOrientation orientation = this.getStorageDrawersOrientationOnPlacement(player);
+                    nbtContainer.setByte("Dir", (byte) orientation.getDirection());
+                    if (orientation.getRotation() == 0) nbtContainer.removeTag("Rot");
+                    else nbtContainer.setByte("Rot", (byte) orientation.getRotation());
+                }
 
         else if (TEClassName.contains("com.bluepowermod.tile") && nbtContainer.hasKey("rotation")) {
             try {
@@ -758,6 +767,54 @@ public class ItemBarrelMover extends Item {
 
         return barrelOrientation;
 
+    }
+
+    private StorageDrawersOrientation getStorageDrawersOrientationOnPlacement(EntityPlayer player) {
+        int quadrant = MathHelper.floor_double(player.rotationYaw * 4f / 360f + 0.5f) & 3;
+        int horizontalDirection = this.getStorageDrawersHorizontalDirection(quadrant);
+        float pitch = player.rotationPitch;
+
+        if (pitch < -STORAGE_DRAWERS_VERTICAL_PITCH_THRESHOLD) {
+            return new StorageDrawersOrientation(ForgeDirection.DOWN.ordinal(), (4 - quadrant) % 4);
+        }
+
+        if (pitch > STORAGE_DRAWERS_VERTICAL_PITCH_THRESHOLD) {
+            return new StorageDrawersOrientation(ForgeDirection.UP.ordinal(), (2 - quadrant + 4) % 4);
+        }
+
+        return new StorageDrawersOrientation(horizontalDirection, 0);
+    }
+
+    private int getStorageDrawersHorizontalDirection(int quadrant) {
+        switch (quadrant) {
+            case 0:
+                return ForgeDirection.NORTH.ordinal();
+            case 1:
+                return ForgeDirection.EAST.ordinal();
+            case 2:
+                return ForgeDirection.SOUTH.ordinal();
+            default:
+                return ForgeDirection.WEST.ordinal();
+        }
+    }
+
+    private static class StorageDrawersOrientation {
+
+        private final int direction;
+        private final int rotation;
+
+        private StorageDrawersOrientation(int direction, int rotation) {
+            this.direction = direction;
+            this.rotation = rotation;
+        }
+
+        private int getDirection() {
+            return direction;
+        }
+
+        private int getRotation() {
+            return rotation;
+        }
     }
 
     private ArrayList<ForgeDirection> convertOrientationFlagToForge(int flags) {
