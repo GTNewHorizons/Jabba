@@ -24,6 +24,8 @@ public enum UpgradeCore {
     STORAGE2187(Type.STORAGE, 2187),
     STORAGE6561(Type.STORAGE, 6561);
 
+    public static final UpgradeCore[] VALUES = values();
+
     public static enum Type {
         STORAGE,
         ENDER,

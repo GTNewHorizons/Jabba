@@ -25,18 +25,18 @@ public class ItemUpgradeCore extends ItemUpgrade {
 
     @Override
     public String getUnlocalizedName(ItemStack stack) {
-        return UpgradeCore.values()[Math.min(stack.getItemDamage(), UpgradeCore.values().length - 1)].translationKey;
+        return UpgradeCore.VALUES[Math.min(stack.getItemDamage(), UpgradeCore.VALUES.length - 1)].translationKey;
     }
 
     @Override
     public void registerIcons(IIconRegister par1IconRegister) {
-        for (UpgradeCore upgrade : UpgradeCore.values())
+        for (UpgradeCore upgrade : UpgradeCore.VALUES)
             upgrade.icon = par1IconRegister.registerIcon(BetterBarrels.modid + ":coreupg_" + upgrade.ordinal());
     }
 
     @Override
     public IIcon getIconFromDamage(int i) {
-        return UpgradeCore.values()[Math.min(i, UpgradeCore.values().length - 1)].icon;
+        return UpgradeCore.VALUES[Math.min(i, UpgradeCore.VALUES.length - 1)].icon;
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -45,7 +45,7 @@ public class ItemUpgradeCore extends ItemUpgrade {
         super.addInformation(par1ItemStack, par2EntityPlayer, par3List, par4);
 
         par3List.add(
-                UpgradeCore.values()[Math.min(par1ItemStack.getItemDamage(), UpgradeCore.values().length - 1)]
+                UpgradeCore.VALUES[Math.min(par1ItemStack.getItemDamage(), UpgradeCore.VALUES.length - 1)]
                         .description());
     }
 
@@ -53,7 +53,7 @@ public class ItemUpgradeCore extends ItemUpgrade {
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs tabs, List list) {
-        for (UpgradeCore upgrade : UpgradeCore.values()) {
+        for (UpgradeCore upgrade : UpgradeCore.VALUES) {
             list.add(new ItemStack(item, 1, upgrade.ordinal()));
         }
     }

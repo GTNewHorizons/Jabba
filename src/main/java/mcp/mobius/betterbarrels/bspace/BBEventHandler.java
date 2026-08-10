@@ -28,7 +28,7 @@ public class BBEventHandler {
             event.toolTip.add(
                     1,
                     StatCollector.translateToLocal("text.jabba.tooltip.slots.used")
-                            + UpgradeCore.values()[event.itemStack.getItemDamage()].slotsUsed);
+                            + UpgradeCore.VALUES[event.itemStack.getItemDamage()].slotsUsed);
         }
 
         if (event.itemStack.getItem() instanceof ItemUpgradeStructural) {

@@ -263,7 +263,7 @@ public class BarrelCoreUpgrades {
     }
 
     void applyUpgrade(ItemStack stack, EntityPlayer player) {
-        UpgradeCore core = UpgradeCore.values()[stack.getItemDamage()];
+        UpgradeCore core = UpgradeCore.VALUES[stack.getItemDamage()];
 
         if (!(core.type == UpgradeCore.Type.STORAGE) && this.hasUpgrade(core)) {
             BarrelPacketHandler.sendLocalizedChat(player, LocalizedChat.COREUPGRADE_EXISTS);
@@ -382,7 +382,7 @@ public class BarrelCoreUpgrades {
         int[] savedUpgrades = NBTTag.getIntArray("coreUpgrades");
         this.upgradeList = new ArrayList<UpgradeCore>();
         for (int i = 0; i < savedUpgrades.length; i++)
-            this.upgradeList.add(UpgradeCore.values()[savedUpgrades[i] + (saveVersion == 3 ? -1 : 0)]);
+            this.upgradeList.add(UpgradeCore.VALUES[savedUpgrades[i] + (saveVersion == 3 ? -1 : 0)]);
 
         this.levelStructural = NBTTag.getInteger("structural");
         if (levelStructural >= StructuralLevel.LEVELS.length) {

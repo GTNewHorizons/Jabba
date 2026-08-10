@@ -54,7 +54,7 @@ public class Message0x05CoreUpdate extends SimpleChannelInboundHandler<Message0x
         msg.y = dat.readInt();
         msg.z = dat.readInt();
         int size = dat.readInt();
-        for (int i = 0; i < size; i++) msg.upgrades.add(UpgradeCore.values()[dat.readInt()]);
+        for (int i = 0; i < size; i++) msg.upgrades.add(UpgradeCore.VALUES[dat.readInt()]);
 
         for (UpgradeCore i : msg.upgrades) {
             if (i.type == UpgradeCore.Type.STORAGE) {
