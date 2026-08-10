@@ -415,7 +415,7 @@ public class TileEntityBarrel extends TileEntity implements ISidedInventory, IDe
         for (ForgeDirection s : ForgeDirection.VALID_DIRECTIONS) {
             int sideType = this.sideUpgrades[s.ordinal()];
             if ((UpgradeSide.mapReq[sideType] != -1)
-                    && (!coreUpgrades.hasUpgrade(UpgradeCore.values()[UpgradeSide.mapReq[sideType]])))
+                    && (!coreUpgrades.hasUpgrade(UpgradeCore.VALUES[UpgradeSide.mapReq[sideType]])))
                 this.dropSideUpgrade(player, s);
         }
     }

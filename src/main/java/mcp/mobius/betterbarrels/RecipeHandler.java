@@ -90,7 +90,7 @@ public class RecipeHandler {
 
         // Storage upgrades
         UpgradeCore prevStorage = UpgradeCore.STORAGE;
-        for (UpgradeCore core : UpgradeCore.values()) {
+        for (UpgradeCore core : UpgradeCore.VALUES) {
             if (core.type == UpgradeCore.Type.STORAGE && core.slotsUsed > 1) {
                 if (core.slotsUsed <= StructuralLevel.LEVELS[BetterBarrels.maxCraftableTier].getMaxCoreSlots())
                     addCoreUpgradeUpgrade(core.ordinal(), prevStorage.ordinal());
