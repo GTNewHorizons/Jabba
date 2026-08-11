@@ -21,7 +21,7 @@ import mcp.mobius.betterbarrels.network.BarrelPacketHandler;
 
 public class ItemBarrelHammer extends Item implements IOverlayItem {
 
-    public static enum HammerMode {
+    public enum HammerMode {
 
         NORMAL,
         BSPACE,
@@ -32,10 +32,11 @@ public class ItemBarrelHammer extends Item implements IOverlayItem {
         VOID,
         CREATIVE;
 
+        public static final HammerMode[] VALUES = values();
         public final LocalizedChat message;
         public IIcon icon;
 
-        private HammerMode() {
+        HammerMode() {
             this.message = LocalizedChat.valueOf("HAMMER_" + this.name().toUpperCase());
         }
 
@@ -44,7 +45,7 @@ public class ItemBarrelHammer extends Item implements IOverlayItem {
             if (!player.capabilities.isCreativeMode && next_mode == HammerMode.CREATIVE.ordinal()) {
                 next_mode++;
             }
-            if (next_mode >= HammerMode.values().length) {
+            if (next_mode >= HammerMode.VALUES.length) {
                 next_mode = 0;
             }
             item.setItemDamage(next_mode);
@@ -53,10 +54,10 @@ public class ItemBarrelHammer extends Item implements IOverlayItem {
 
         public static HammerMode getMode(final ItemStack item) {
             int mode = item.getItemDamage();
-            if (mode >= HammerMode.values().length) {
+            if (mode >= HammerMode.VALUES.length) {
                 mode = 0;
             }
-            return HammerMode.values()[mode];
+            return HammerMode.VALUES[mode];
         }
     }
 
@@ -75,17 +76,17 @@ public class ItemBarrelHammer extends Item implements IOverlayItem {
 
     @Override
     public void registerIcons(IIconRegister par1IconRegister) {
-        for (HammerMode mode : HammerMode.values()) {
+        for (HammerMode mode : HammerMode.VALUES) {
             mode.icon = par1IconRegister.registerIcon(BetterBarrels.modid + ":hammer_" + mode.name().toLowerCase());
         }
     }
 
     @Override
     public IIcon getIconFromDamage(int dmg) {
-        if (dmg >= HammerMode.values().length) {
+        if (dmg >= HammerMode.VALUES.length) {
             dmg = 0;
         }
-        return HammerMode.values()[dmg].icon;
+        return HammerMode.VALUES[dmg].icon;
     }
 
     @Override
@@ -129,7 +130,7 @@ public class ItemBarrelHammer extends Item implements IOverlayItem {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs tabs, List list) {
-        for (HammerMode mode : HammerMode.values()) {
+        for (HammerMode mode : HammerMode.VALUES) {
             list.add(new ItemStack(item, 1, mode.ordinal()));
         }
     }
