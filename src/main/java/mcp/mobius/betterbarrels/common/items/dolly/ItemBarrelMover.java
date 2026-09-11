@@ -206,7 +206,7 @@ public class ItemBarrelMover extends Item {
 
         if (stack.hasTagCompound() && stack.getTagCompound().hasKey("Container")) {
             stack.getTagCompound().setBoolean(PREVENT_FOLD_TAG_KEY, true);
-            return this.placeContainer(stack, player, world, x, y, z, side);
+            return this.placeContainer(stack, player, world, x, y, z, side, hitX, hitY, hitZ);
         }
 
         return false;
@@ -247,7 +247,8 @@ public class ItemBarrelMover extends Item {
         return itemStack;
     }
 
-    protected boolean placeContainer(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side) {
+    protected boolean placeContainer(ItemStack stack, EntityPlayer player, World world, int targX, int targY, int targZ,
+            int side, float hitX, float hitY, float hitZ) {
         NBTTagCompound nbtStack = stack.getTagCompound();
         NBTTagCompound nbtContainerStack = nbtStack.getCompoundTag("Container");
 
@@ -263,10 +264,6 @@ public class ItemBarrelMover extends Item {
 
         ForgeDirection targSide = ForgeDirection.getOrientation(side);
         // if (world.isBlockSolidOnSide(x, y, z, targSide)) {return false;}
-
-        int targX = x;
-        int targY = y;
-        int targZ = z;
 
         Block targetBlock = world.getBlock(targX, targY, targZ);
 
@@ -293,8 +290,9 @@ public class ItemBarrelMover extends Item {
         nbtContainer.setInteger("z", targZ);
 
         /* Vanilla chest */
-        if (TEClassName.contains("net.minecraft.tileentity.TileEntityChest"))
-            blockMeta = this.getBarrelOrientationOnPlacement(player).ordinal();
+        if (TEClassName.contains("net.minecraft.tileentity.TileEntityChest")) {
+            blockMeta = Blocks.chest.onBlockPlaced(world, targX, targY, targZ, side, hitX, hitY, hitZ, 0);
+        }
 
         /* AE2 sky stone chest orientation correction */
         else if (TEClassName.contains("appeng.tile.storage.TileSkyChest") && nbtContainer.hasKey("orientation_forward"))
@@ -505,6 +503,12 @@ public class ItemBarrelMover extends Item {
                 }
 
         world.setBlock(targX, targY, targZ, storedBlock, blockMeta, 1 + 2);
+
+        if (TEClassName.contains("net.minecraft.tileentity.TileEntityChest")) {
+            ItemStack fakeChestStack = new ItemStack(Blocks.chest);
+            Blocks.chest.onBlockPlacedBy(world, targX, targY, targZ, player, fakeChestStack);
+        }
+
         TileEntity entity = world.getTileEntity(targX, targY, targZ);
         entity.readFromNBT(nbtContainer);
 
@@ -513,10 +517,7 @@ public class ItemBarrelMover extends Item {
                 && classMap.get("ic2.api.tile.IWrenchable").isInstance(entity))
             this.fixIC2Orientation(entity, player, targY);
 
-        if (TEClassName.contains("net.minecraft.tileentity.TileEntityChest"))
-            world.setBlockMetadataWithNotify(targX, targY, targZ, blockMeta, 1 + 2);
-
-        else if (TEClassName.contains("forestry.factory.tiles.TileWorktable")) {
+        if (TEClassName.contains("forestry.factory.tiles.TileWorktable")) {
             // Need to manually rebuild recipe outputs for memorized recipes.
             // They don't get rebuilt when reading from NBT, for some reason.
             RecipeMemory recipeMemory = ((TileWorktable) entity).getMemory();
