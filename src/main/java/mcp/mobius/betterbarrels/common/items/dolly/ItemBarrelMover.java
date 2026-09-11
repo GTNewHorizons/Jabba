@@ -289,9 +289,10 @@ public class ItemBarrelMover extends Item {
         nbtContainer.setInteger("y", targY);
         nbtContainer.setInteger("z", targZ);
 
-        /* Vanilla chest */
-        if (TEClassName.contains("net.minecraft.tileentity.TileEntityChest")) {
-            blockMeta = Blocks.chest.onBlockPlaced(world, targX, targY, targZ, side, hitX, hitY, hitZ, 0);
+        /* Vanilla / TwilightForest chest */
+        if (TEClassName.contains("net.minecraft.tileentity.TileEntityChest")
+                || TEClassName.contains("twilightforest.tileentity.TileEntityTFChest")) {
+            blockMeta = storedBlock.onBlockPlaced(world, targX, targY, targZ, side, hitX, hitY, hitZ, 0);
         }
 
         /* AE2 sky stone chest orientation correction */
@@ -504,9 +505,10 @@ public class ItemBarrelMover extends Item {
 
         world.setBlock(targX, targY, targZ, storedBlock, blockMeta, 1 + 2);
 
-        if (TEClassName.contains("net.minecraft.tileentity.TileEntityChest")) {
-            ItemStack fakeChestStack = new ItemStack(Blocks.chest);
-            Blocks.chest.onBlockPlacedBy(world, targX, targY, targZ, player, fakeChestStack);
+        if (TEClassName.contains("net.minecraft.tileentity.TileEntityChest")
+                || TEClassName.contains("twilightforest.tileentity.TileEntityTFChest")) {
+            ItemStack fakeStack = new ItemStack(storedBlock);
+            storedBlock.onBlockPlacedBy(world, targX, targY, targZ, player, fakeStack);
         }
 
         TileEntity entity = world.getTileEntity(targX, targY, targZ);
