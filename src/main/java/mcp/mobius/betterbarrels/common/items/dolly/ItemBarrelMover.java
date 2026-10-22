@@ -23,14 +23,18 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityMobSpawner;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.Cancelable;
+import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.registry.GameData;
 import forestry.factory.recipes.MemorizedRecipe;
 import forestry.factory.recipes.RecipeMemory;
@@ -65,6 +69,41 @@ public class ItemBarrelMover extends Item {
     protected enum DollyType {
         NORMAL,
         DIAMOND;
+    }
+
+    @Cancelable
+    public static class DollyPlaceEvent extends Event {
+
+        public final EntityPlayer player;
+        public final World world;
+        public final Block block;
+        public final int targX, targY, targZ;
+        public final int metadata;
+        public final NBTTagCompound tileNBT;
+
+        private String rejectionMessage;
+
+        public void reject(String message) {
+            this.rejectionMessage = message;
+            setCanceled(true);
+        }
+
+        public String getRejectionMessage() {
+            return rejectionMessage;
+        }
+
+        public DollyPlaceEvent(EntityPlayer player, World world, Block block, int targX, int targY, int targZ,
+                int metadata, NBTTagCompound tileNBT) {
+
+            this.player = player;
+            this.world = world;
+            this.block = block;
+            this.targX = targX;
+            this.targY = targY;
+            this.targZ = targZ;
+            this.metadata = metadata;
+            this.tileNBT = (NBTTagCompound) tileNBT.copy();
+        }
     }
 
     static {
@@ -282,6 +321,23 @@ public class ItemBarrelMover extends Item {
             if (targSide.equals(ForgeDirection.EAST)) targX += 1;
             if (targSide.equals(ForgeDirection.UP)) targY += 1;
             if (targSide.equals(ForgeDirection.DOWN)) targY -= 1;
+        }
+
+        DollyPlaceEvent placeEvent = new DollyPlaceEvent(
+                player,
+                world,
+                storedBlock,
+                targX,
+                targY,
+                targZ,
+                blockMeta,
+                nbtContainer);
+
+        if (MinecraftForge.EVENT_BUS.post(placeEvent)) {
+            if (!world.isRemote && placeEvent.getRejectionMessage() != null) {
+                player.addChatMessage(new ChatComponentText(placeEvent.getRejectionMessage()));
+            }
+            return false;
         }
 
         if (!(world.canPlaceEntityOnSide(storedBlock, targX, targY, targZ, false, side, (Entity) null, stack))) {
