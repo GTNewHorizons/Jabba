@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import mcp.mobius.betterbarrels.api.events.DollyPlaceEvent;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
@@ -39,6 +38,7 @@ import forestry.factory.recipes.RecipeMemory;
 import forestry.factory.tiles.TileWorktable;
 import mcp.mobius.betterbarrels.BetterBarrels;
 import mcp.mobius.betterbarrels.Utils;
+import mcp.mobius.betterbarrels.api.events.DollyPlaceEvent;
 import mcp.mobius.betterbarrels.common.JabbaCreativeTab;
 import mcp.mobius.betterbarrels.common.LocalizedChat;
 import mcp.mobius.betterbarrels.common.blocks.TileEntityBarrel;
