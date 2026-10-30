@@ -28,6 +28,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -37,6 +38,7 @@ import forestry.factory.recipes.RecipeMemory;
 import forestry.factory.tiles.TileWorktable;
 import mcp.mobius.betterbarrels.BetterBarrels;
 import mcp.mobius.betterbarrels.Utils;
+import mcp.mobius.betterbarrels.api.events.DollyPlaceEvent;
 import mcp.mobius.betterbarrels.common.JabbaCreativeTab;
 import mcp.mobius.betterbarrels.common.LocalizedChat;
 import mcp.mobius.betterbarrels.common.blocks.TileEntityBarrel;
@@ -282,6 +284,20 @@ public class ItemBarrelMover extends Item {
             if (targSide.equals(ForgeDirection.EAST)) targX += 1;
             if (targSide.equals(ForgeDirection.UP)) targY += 1;
             if (targSide.equals(ForgeDirection.DOWN)) targY -= 1;
+        }
+
+        DollyPlaceEvent placeEvent = new DollyPlaceEvent(
+                player,
+                world,
+                storedBlock,
+                targX,
+                targY,
+                targZ,
+                blockMeta,
+                nbtContainer);
+
+        if (MinecraftForge.EVENT_BUS.post(placeEvent)) {
+            return false;
         }
 
         if (!(world.canPlaceEntityOnSide(storedBlock, targX, targY, targZ, false, side, (Entity) null, stack))) {
