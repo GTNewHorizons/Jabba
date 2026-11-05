@@ -6,8 +6,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 /**
- * Inventory item lighting for an item drawn on a barrel face.
- * Inspired from StorageDrawer's implementation
+ * Inventory item lighting for an item drawn on a barrel face. Inspired from StorageDrawer's implementation
  */
 public class SurfaceItemRenderHelper {
 
