@@ -53,6 +53,11 @@ public class BlockBarrelRenderer implements ISimpleBlockRenderingHandler {
 
         if (barrel == null) return false;
 
+        final BarrelLightingContext lightingContext = barrel.getLightingContext();
+        if (lightingContext != null) {
+            lightingContext.populate(world, x, y, z, tile);
+        }
+
         renderer.uvRotateBottom = forgeFacingtoMCTopBottomRotate[0][barrel.rotation.ordinal()];
         renderer.uvRotateTop = forgeFacingtoMCTopBottomRotate[1][barrel.rotation.ordinal()];
 

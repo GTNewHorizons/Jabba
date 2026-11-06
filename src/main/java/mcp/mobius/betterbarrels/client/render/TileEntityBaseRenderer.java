@@ -1,11 +1,12 @@
 package mcp.mobius.betterbarrels.client.render;
 
+import java.nio.FloatBuffer;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -16,6 +17,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import mcp.mobius.betterbarrels.common.blocks.logic.Coordinates;
@@ -24,7 +26,10 @@ public abstract class TileEntityBaseRenderer extends TileEntitySpecialRenderer {
 
     protected float scale = 1f / 256f;
     protected RenderBlocks renderBlocks = new RenderBlocks();
-    protected RenderItem renderItem = new SurfaceItemRenderer();
+    private static final int MATRIX_SIZE = 16;
+
+    protected SurfaceItemRenderer renderItem = new SurfaceItemRenderer();
+    private final FloatBuffer blockFrame = BufferUtils.createFloatBuffer(MATRIX_SIZE);
 
     protected Minecraft mc = Minecraft.getMinecraft();
     protected TextureManager texManager = mc.renderEngine;
@@ -107,7 +112,7 @@ public abstract class TileEntityBaseRenderer extends TileEntitySpecialRenderer {
             return;
         }
 
-        GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+        GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_LIGHTING_BIT);
         GL11.glPushMatrix();
 
         this.alignRendering(side, orientation, barrelPos);
@@ -115,6 +120,32 @@ public abstract class TileEntityBaseRenderer extends TileEntitySpecialRenderer {
 
         if (!ForgeHooksClient.renderInventoryItem(this.renderBlocks, this.texManager, stack, true, 0.0F, 0.0F, 0.0F)) {
             this.renderItem.renderItemIntoGUI(this.renderFont, this.texManager, stack, 0, 0, true);
+        }
+
+        GL11.glPopMatrix();
+        GL11.glPopAttrib();
+    }
+
+    protected void renderStackOnBlock(ItemStack stack, ForgeDirection side, ForgeDirection orientation,
+            Coordinates barrelPos, float size, double posx, double posy, BarrelLightingContext lightingContext) {
+        if (stack == null) {
+            return;
+        }
+
+        GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_LIGHTING_BIT);
+        GL11.glPushMatrix();
+
+        GL11.glTranslated(barrelPos.x, barrelPos.y, barrelPos.z);
+        this.blockFrame.clear();
+        GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, this.blockFrame);
+        GL11.glTranslated(-barrelPos.x, -barrelPos.y, -barrelPos.z);
+
+        this.alignRendering(side, orientation, barrelPos);
+        this.moveRendering(size, posx, posy, -0.001);
+
+        if (!ForgeHooksClient.renderInventoryItem(this.renderBlocks, this.texManager, stack, true, 0.0F, 0.0F, 0.0F)) {
+            this.renderItem
+                    .renderItemOnFace(this.renderFont, this.texManager, stack, lightingContext, side, this.blockFrame);
         }
 
         GL11.glPopMatrix();
