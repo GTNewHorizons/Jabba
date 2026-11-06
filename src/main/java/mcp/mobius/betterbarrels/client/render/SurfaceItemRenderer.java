@@ -1,5 +1,7 @@
 package mcp.mobius.betterbarrels.client.render;
 
+import java.nio.FloatBuffer;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -14,8 +16,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.ForgeDirection;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Matrix3f;
+import org.lwjgl.util.vector.Matrix4f;
 
 /**
  * This class is specifically designed to render items on top of surfaces in the world with both glint effect and
@@ -28,7 +34,18 @@ public class SurfaceItemRenderer extends RenderItem {
     private static final ResourceLocation RES_ITEM_GLINT = new ResourceLocation(
             "textures/misc/enchanted_item_glint.png");
 
+    private static final int MATRIX_4_SIZE = 16;
+    private static final int MATRIX_3_SIZE = 9;
+
     private RenderBlocks renderBlocksRi = new RenderBlocks();
+
+    private final FloatBuffer faceMatrix = BufferUtils.createFloatBuffer(MATRIX_4_SIZE);
+    private final FloatBuffer faceInverse = BufferUtils.createFloatBuffer(MATRIX_3_SIZE);
+    private final Matrix4f faceFrame = new Matrix4f();
+    private final Matrix3f faceLinear = new Matrix3f();
+    private final float[] cornerAo = new float[BarrelLightingContext.CORNER_COUNT];
+    private final float[] cornerBlockLight = new float[BarrelLightingContext.CORNER_COUNT];
+    private final float[] cornerSkyLight = new float[BarrelLightingContext.CORNER_COUNT];
 
     @Override
     public byte getMiniBlockCount(ItemStack stack, byte original) {
@@ -140,19 +157,37 @@ public class SurfaceItemRenderer extends RenderItem {
         }
     }
 
+    public void renderItemOnFace(FontRenderer fontRenderer, TextureManager texManager, ItemStack itemStack,
+            BarrelLightingContext lightingContext, ForgeDirection side, FloatBuffer blockFrame) {
+        if (itemStack.getItemSpriteNumber() == 0
+                && RenderBlocks.renderItemIn3d(Block.getBlockFromItem(itemStack.getItem()).getRenderType())) {
+            renderItemIntoGUIBlock(texManager, itemStack, 0, 0, lightingContext, side, blockFrame);
+            return;
+        }
+        renderItemIntoGUI(fontRenderer, texManager, itemStack, 0, 0, true);
+    }
+
     private void renderItemIntoGUIBlock(FontRenderer fontRenderer, TextureManager texManager, ItemStack itemStack,
             int x, int y, boolean renderEffect) {
+        renderItemIntoGUIBlock(texManager, itemStack, x, y, null, ForgeDirection.UNKNOWN, null);
+    }
+
+    private void renderItemIntoGUIBlock(TextureManager texManager, ItemStack itemStack, int x, int y,
+            BarrelLightingContext lightingContext, ForgeDirection side, FloatBuffer blockFrame) {
+        final SurfaceItemShader shader = lightingContext == null ? null : SurfaceItemShader.get();
+        final boolean shaded = shader != null && captureFaceInverse();
+
         SurfaceItemRenderHelper.enableStandardItemLighting();
 
         texManager.bindTexture(TextureMap.locationBlocksTexture);
         Block block = Block.getBlockFromItem(itemStack.getItem());
+        final float alphaCutoff = block.getRenderBlockPass() != 0 ? 0.1F : 0.5F;
 
+        GL11.glAlphaFunc(GL11.GL_GREATER, alphaCutoff);
         if (block.getRenderBlockPass() != 0) {
-            GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
             GL11.glEnable(GL11.GL_BLEND);
             OpenGlHelper.glBlendFunc(770, 771, 1, 0);
         } else {
-            GL11.glAlphaFunc(GL11.GL_GREATER, 0.5F);
             GL11.glDisable(GL11.GL_BLEND);
         }
 
@@ -175,9 +210,18 @@ public class SurfaceItemRenderer extends RenderItem {
         GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
         GL11.glPolygonOffset(-1f, -1f);
 
+        int previousProgram = 0;
+        if (shaded) {
+            lightingContext.getFaceCorners(this.renderBlocksRi, side, cornerAo, cornerBlockLight, cornerSkyLight);
+            previousProgram = shader
+                    .begin(alphaCutoff, faceInverse, blockFrame, side, cornerAo, cornerBlockLight, cornerSkyLight);
+        }
         this.renderBlocksRi.useInventoryTint = this.renderWithColor;
         this.renderBlocksRi.renderBlockAsItem(block, itemStack.getItemDamage(), 1);
         this.renderBlocksRi.useInventoryTint = true;
+        if (shaded) {
+            shader.end(previousProgram);
+        }
 
         GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
 
@@ -186,5 +230,27 @@ public class SurfaceItemRenderer extends RenderItem {
         GL11.glPopMatrix();
 
         RenderHelper.disableStandardItemLighting();
+    }
+
+    private boolean captureFaceInverse() {
+        faceMatrix.clear();
+        GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, faceMatrix);
+        faceFrame.load(faceMatrix);
+
+        faceLinear.m00 = faceFrame.m00;
+        faceLinear.m01 = faceFrame.m01;
+        faceLinear.m02 = faceFrame.m02;
+        faceLinear.m10 = faceFrame.m10;
+        faceLinear.m11 = faceFrame.m11;
+        faceLinear.m12 = faceFrame.m12;
+        faceLinear.m20 = faceFrame.m20;
+        faceLinear.m21 = faceFrame.m21;
+        faceLinear.m22 = faceFrame.m22;
+        if (Matrix3f.invert(faceLinear, faceLinear) == null) return false;
+
+        faceInverse.clear();
+        faceLinear.store(faceInverse);
+        faceInverse.flip();
+        return true;
     }
 }

@@ -35,7 +35,11 @@ public class TileEntityBarrelRenderer extends TileEntityBaseRenderer {
 
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double xpos, double ypos, double zpos, float var8) {
-        if (tileEntity instanceof TileEntityBarrel && BetterBarrels.renderStackAndText
+        if (!(tileEntity instanceof TileEntityBarrel barrelEntity)) return;
+        final BarrelLightingContext lightingContext = barrelEntity.getLightingContext();
+        if (lightingContext == null || lightingContext.dirty) return;
+
+        if (BetterBarrels.renderStackAndText
                 && (xpos + 0.5) * (xpos + 0.5) + (ypos + 0.5) * (ypos + 0.5) + (zpos + 0.5) * (zpos + 0.5)
                         < BetterBarrels.renderDistance) {
             this.saveBoundTexture();
@@ -50,9 +54,8 @@ public class TileEntityBarrelRenderer extends TileEntityBaseRenderer {
             GL11.glDisable(GL11.GL_BLEND);
             GL11.glEnable(GL11.GL_LIGHTING);
 
-            ForgeDirection orientation = ((TileEntityBarrel) tileEntity).orientation;
-            ForgeDirection rotation = ((TileEntityBarrel) tileEntity).rotation;
-            TileEntityBarrel barrelEntity = (TileEntityBarrel) tileEntity;
+            ForgeDirection orientation = barrelEntity.orientation;
+            ForgeDirection rotation = barrelEntity.rotation;
             Coordinates barrelPos = new Coordinates(0, xpos, ypos, zpos);
 
             boolean isHammer = this.mc.thePlayer.getHeldItem() != null
@@ -73,7 +76,8 @@ public class TileEntityBarrelRenderer extends TileEntityBaseRenderer {
                             barrelPos,
                             8.0F,
                             65.0F,
-                            isTopBottom ? 64.0F : 75.0F);
+                            isTopBottom ? 64.0F : 75.0F,
+                            lightingContext);
                     String barrelString = this.getBarrelString(barrelEntity);
                     this.renderTextOnBlock(
                             barrelString,
