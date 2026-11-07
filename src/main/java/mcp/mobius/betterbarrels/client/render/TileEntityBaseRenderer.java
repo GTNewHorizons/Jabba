@@ -107,7 +107,7 @@ public abstract class TileEntityBaseRenderer extends TileEntitySpecialRenderer {
             return;
         }
 
-        GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+        GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_LIGHTING_BIT);
         GL11.glPushMatrix();
 
         this.alignRendering(side, orientation, barrelPos);
