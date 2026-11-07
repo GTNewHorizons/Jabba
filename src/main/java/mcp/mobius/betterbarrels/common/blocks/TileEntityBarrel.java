@@ -35,12 +35,10 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import mcp.mobius.betterbarrels.BetterBarrels;
 import mcp.mobius.betterbarrels.ServerTickHandler;
 import mcp.mobius.betterbarrels.Utils;
 import mcp.mobius.betterbarrels.bspace.BSpaceStorageHandler;
-import mcp.mobius.betterbarrels.client.render.BarrelLightingContext;
 import mcp.mobius.betterbarrels.common.LocalizedChat;
 import mcp.mobius.betterbarrels.common.items.ItemBarrelHammer;
 import mcp.mobius.betterbarrels.common.items.ItemTuningFork;
@@ -80,9 +78,6 @@ public class TileEntityBarrel extends TileEntity implements ISidedInventory, IDe
     public long timeSinceLastUpd = System.currentTimeMillis();
     public boolean overlaying = false;
 
-    @SideOnly(Side.CLIENT)
-    private volatile BarrelLightingContext lightingContext;
-
     private Message0x01ContentUpdate lastContentMessage;
     private Message0x02GhostUpdate lastGhostMessage;
 
@@ -100,24 +95,6 @@ public class TileEntityBarrel extends TileEntity implements ISidedInventory, IDe
 
     public boolean getLinked() {
         return this.isLinked;
-    }
-
-    @Override
-    public void validate() {
-        super.validate();
-        if (this.worldObj != null && this.worldObj.isRemote) {
-            this.createLightingContext();
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
-    private void createLightingContext() {
-        this.lightingContext = new BarrelLightingContext();
-    }
-
-    @SideOnly(Side.CLIENT)
-    public BarrelLightingContext getLightingContext() {
-        return this.lightingContext;
     }
 
     public IBarrelStorage getStorage() {
