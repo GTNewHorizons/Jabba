@@ -30,7 +30,7 @@ public class ItemDiamondMover extends ItemBarrelMover {
 
         if (stack.hasTagCompound() && stack.getTagCompound().hasKey("Container")) {
             boolean isSpawner = stack.getTagCompound().getCompoundTag("Container").getBoolean("isSpawner");
-            boolean ret = this.placeContainer(stack, player, world, x, y, z, side);
+            boolean ret = this.placeContainer(stack, player, world, x, y, z, side, hitX, hitY, hitZ);
             if (isSpawner) {
                 if (ret) stack.setItemDamage(stack.getItemDamage() + 1);
                 if (stack.getItemDamage() >= stack.getMaxDamage()) stack.stackSize -= 1;
